@@ -17,6 +17,11 @@ export class UsersController {
         return this.userInfoService.create(user);
     }
     
+
+
+
+
+    
     @UseGuards(LocalAuthGuard)
     @Post('login')
     async login(@Request() req) {
@@ -24,6 +29,11 @@ export class UsersController {
       console.log("auth/login========", req.user);
       return this.authService.login(req.user);
     }
+
+
+
+
+
 
 
 

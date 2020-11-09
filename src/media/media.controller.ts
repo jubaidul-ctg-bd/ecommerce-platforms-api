@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Res, UploadedFile, UseInterceptors, Request } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Res, UploadedFile, UseInterceptors, Request, Req } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express/multer/interceptors/file.interceptor';
 import { readdir, readdirSync, unlinkSync } from 'fs';
 import { join, parse } from 'path';
@@ -10,8 +10,8 @@ import { SellersService } from 'src/sellers/sellers.service';
 import {mkdirSync} from 'fs';
 
 import * as multer from 'jwt-decode'
-const directoryPath = join(process.cwd(), '/upload')
-const path=baseUrl+'/media/image/';
+import { LocalAuthGuard } from 'src/users/auth/local-auth.guard';
+
 
 // export const upload = multer({
 //     storage: multer.diskStorage({
@@ -38,83 +38,88 @@ export class MediaController {
 
 
     @Get('media')
-    async findall(@Res() res){
-        console.log("PATH================",baseUrl)
-        //console.log("directoryPath=============",directoryPath);
-        // console.log("findAll api Query: pageSize : ",pageSize," and current : ",current);
-        readdir(directoryPath, function (err, files) {
-            //handling error
-            if (err) {
-                return console.log('Unable to scan directory: ' + err);
-            } 
-            //listing all files using forEach
-            files.forEach(function (file) {
-                // Do whatever you want to do with the file
-                console.log(file); 
+    async findall(@Request() req, @Res() res) {
+        console.log("current Seller Called===============")
+        const header = req.headers.authorization
+        const decoded = jwt_decode(header);
+        const shopName = await this.mediaService.mediaSeller(decoded);
+        if(shopName) {
+            var directoryPath = join(process.cwd(), '/upload/'+shopName);
+        } else {
+            var directoryPath = join(process.cwd(), '/upload/categoryImages');
+        }
+        try {
+                
+            const path=baseUrl+'/media/image?url='+shopName+'/';
+            readdir(directoryPath, function (err, files) {
+                //handling error
+                if (err) {
+                    return console.log('Unable to scan directory: ' + err);
+                } 
+                //listing all files using forEach
+                files.forEach(function (file) {
+                    // Do whatever you want to do with the file
+                    console.log(file); 
+                });
             });
-        });
 
-        //console.log("__dirname=============",__dirname);
+            //console.log("__dirname=============",__dirname);
 
-        var sync = readdirSync(directoryPath);
-        //console.log("sync ===========", sync);
+            var sync = readdirSync(directoryPath);
+            //console.log("sync ===========", sync);
 
-        var image = [];
-        sync.forEach((file,index )=> { 
-            image.push({
-                uid : index+1,
-                name: file,
-                status: "done",
-                url: path+file,
-            })
-            console.log(file); 
-        }); 
-
-
-        // sync.forEach(file => { 
-        //     file['status']= "done";
-        //     // var str=id++;
-        //     file['url']=directoryPath+'/'+file;
-        //     file['uid']=Date.now();
-        //     // image.push({
-        //     //     uid : toString(str),
-        //     //     name: file,
-        //     //     status: "done",
-        //     //     url: directoryPath+'/'+file,
-        //     // })
-        //     console.log(file); 
-        // }); 
-
-        //console.log("image=========", image);
-        //console.log(typeof(image))
-
-        let read = { root: 'upload' };
-
-        //console.log("root=============", __dirname);
-        // return image;
- 
-        //var cats = await this.CatsService.findall()
-        return res.json(image)
+            var image = [];
+            sync.forEach((file,index )=> { 
+                image.push({
+                    uid : index+1,
+                    name: file,
+                    status: "done",
+                    url: path+file,
+                })
+                console.log(file); 
+            }); 
+            console.log("image==========", image);
+            return res.json(image)
+        } catch(err) {
+            console.log("No Such directory file");
+        }
     }
 
-    @Get('image/:imgpath')
-    seeUploadedFile(@Param('imgpath') abs, @Res() res) {
-        return res.sendFile(abs, { root: 'upload' });
+    @Get('image')
+    // async seeUploadedFile(@Param('imgpath') abs, @Res() res) {
+    async seeUploadedFile(@Request() abs, @Res() res) {
+        
+        console.log("lHeader========", abs);
+        const url = abs.query.url;
+        console.log("urllllllllllllll", url);
+        
+        // const header = abs.headers.authorization
+        // const decoded = jwt_decode(header);
+        // const shopName = await this.mediaService.mediaSeller(decoded);
+        return res.sendFile(url, { root: 'upload/'});
     }
 
    
     @Post('deleteImage')
-    deleteImage(@Body() body) {
+    async deleteImage(@Request() res,@Body() body) {
+        const header = res.headers.authorization
+        const decoded = jwt_decode(header);
+        const shopName = await this.mediaService.mediaSeller(decoded);
+        if(shopName) {
+            var directoryPath = join(process.cwd(), '/upload/'+shopName);
+        } else {
+            var directoryPath = join(process.cwd(), '/upload/categoryImages');
+        }
         console.log(body);
         return unlinkSync(directoryPath+'/'+body.name)
     }
 
     
     // async mediaSeller(@Request() req) {
-        //     console.log("current Seller Called===============")
-        //     const header = req.headers.authorization
-        //     const decoded = jwt_decode(header);
-        //     this._shopName = await this.mediaService.mediaSeller(decoded);
+            // console.log("current Seller Called===============")
+            // const header = req.headers.authorization
+            // const decoded = jwt_decode(header);
+            // this._shopName = await this.mediaService.mediaSeller(decoded);
         // }
 
     @Post('upload')
@@ -123,9 +128,15 @@ export class MediaController {
         storage: diskStorage({
         destination: (req, file, callback) => {
             let dest = req.query.dest;
-            let path = `upload/${dest}`;
-            mkdirSync(path);
-            callback(null, path);
+            let tmp = `upload/${dest}`;
+
+            try {
+                mkdirSync(tmp);
+            }
+            catch (err) {
+                
+            }
+            callback(null, tmp);
             },
           filename: (req, file, cb) => {
           const randomName = parse(file.originalname).name.replace(" ", "-")+Date.now()+parse(file.originalname).ext;
