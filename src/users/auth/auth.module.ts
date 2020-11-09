@@ -8,12 +8,18 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
 import { SellersModule } from 'src/sellers/sellers.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { SellerUser } from 'src/sellers/sellerSchema/userSeller.entity';
+import { Seller } from 'src/sellers/sellerSchema/seller.entity';
 
 
 @Module({
   imports: [
     forwardRef(() => UsersModule,),
     forwardRef(() => SellersModule,),
+    TypeOrmModule,TypeOrmModule.forFeature([SellerUser],'ebhubon'),
+    TypeOrmModule.forFeature([Seller],'ebhubon'),
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,

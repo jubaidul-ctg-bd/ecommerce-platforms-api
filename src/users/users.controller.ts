@@ -13,7 +13,6 @@ export class UsersController {
     @UsePipes(new ValidationPipe())
     @Post('registration')
     createfirst(@Body() user: User) {
-        console.log("clalled mysql post")
         return this.userInfoService.create(user);
     }
     
@@ -21,13 +20,15 @@ export class UsersController {
 
 
 
-    
+
     @UseGuards(LocalAuthGuard)
     @Post('login')
     async login(@Request() req) {
-      console.log("SELLERCALLED")
-      console.log("auth/login========", req.user);
-      return this.authService.login(req.user);
+      console.log("USER AGENT=============",req.body.userAgent);
+      let userAgent = "";
+      if(req.body && req.body.hasOwnProperty("userAgent") && req.body.userAgent)
+        userAgent = req.body.userAgent;
+      return this.authService.login(req.user,userAgent);
     }
 
 
@@ -39,7 +40,6 @@ export class UsersController {
 
     @Post('delete')
     delete(@Body() body) {
-        console.log(body)
         return this.userInfoService.delete(body.id);
     }
 

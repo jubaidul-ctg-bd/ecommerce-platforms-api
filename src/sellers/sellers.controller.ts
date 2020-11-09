@@ -86,7 +86,7 @@ export class SellersController {
     
     @Post('access')
     permission(@Body() params) {
-        console.log(params)
+        
         return this.sellerInfoService.permission(params.id,params);
     }
 
@@ -100,7 +100,7 @@ export class SellersController {
     
     @Post('delete')
     delete(@Body() body) {
-        console.log(body)
+        
         return this.sellerInfoService.delete(body.id);
     }
 
@@ -108,16 +108,15 @@ export class SellersController {
     
     @Post('update')
     update(@Body() params) {
-        console.log("Seller CAlled===============",params)
+        
         // console.log("asasdasdasdasd",params[0])
         // console.log(x.length)
         return this.sellerInfoService.update(params);
     }
 
-
+    
     @Get('currentSeller')
     sellerDetail(@Request() req) {
-        console.log("current Seller Called===============")
         const header = req.headers.authorization
         const decoded = jwt_decode(header);
         return this.sellerInfoService.sellerDetail(decoded);

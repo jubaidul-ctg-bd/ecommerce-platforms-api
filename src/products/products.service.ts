@@ -12,10 +12,32 @@ export class ProductsService {
     @InjectRepository(Product,'ebhubon') private readonly productRepository: Repository<Product>,
     @InjectRepository(Category,'ebhubon') private readonly categoryRepository: Repository<Category>) {}
 
-
+    
     async findAll(): Promise<Product[]> {
 
         let allProducts = await this.productRepository.find();
+        // var temp = [] 
+        // var i=0;
+        // for (let entry of allProducts) {
+        //   console.log("OBJECT ==========",entry); 
+        //   const categorytitle = await this.categoryRepository.findOne({
+        //     where:{_id:entry._id}})
+        //     console.log("PRODUCT CATEGORY===========",categorytitle)
+        //     temp[i] = entry
+        //     temp[i].categoryId = categorytitle.title
+        //     i++
+        // }
+        // allProducts = Object (temp)
+        // console.log(typeof allProducts)
+        // console.log(allProducts);
+        return allProducts; 
+      }
+
+
+
+      async findCurrentSeller(decode: any): Promise<Product[]> {
+
+        let allProducts = await this.productRepository.find({where:{shopId: decode._id}});
         // var temp = [] 
         // var i=0;
         // for (let entry of allProducts) {
@@ -41,7 +63,7 @@ export class ProductsService {
         await this.productRepository.delete(id);
       }
 
-      async create(data: any):Promise<any> {
+      async create(data: any, decoded: any):Promise<any> {
         //const user = this.usersRepository.create(data);
         // console.log("clalled mysql add method called")
         // console.log(data)
@@ -50,11 +72,13 @@ export class ProductsService {
 
         console.log(data.categories)
         if (data.categories){
-          data.categoryId  =new  ObjID (data.categories[data.categories.length-1])
+          data.categoryId  = new  ObjID (data.categories[data.categories.length-1])
         }
         else{
           data.categoryId = null
         }
+
+        data.sellerId =  new  ObjID (decoded.sl)
         return await this.productRepository.save(data)
 
         

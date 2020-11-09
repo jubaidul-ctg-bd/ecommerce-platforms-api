@@ -25,39 +25,39 @@ export class SellersService {
           }
 
         async personDetails(_id: string) {
-            console.log("ID====================",_id);
+            
             return await this.sellerRepository.findOne(_id)
             //return this.sellerinfoRepository.update({_id}, data);
           }
 
 
         async permission(_id: ObjectID,data: Seller) {
-            console.log("ID====================",_id);
+           
             await this.sellerRepository.update({_id}, data); 
             return await this.sellerRepository.findOne(_id)
             //return this.sellerinfoRepository.update({_id}, data);
           }
 
-        async find(username: string): Promise<User> {
-            const name = await this.userRepository.findOne({username:username});
+        // async find(username: string): Promise<User> {
+        //     const name = await this.userRepository.findOne({username:username});
             
-            if(name!=null)
-            {
-                console.log("HERE1111111111111111")
-                console.log(name)
-                return await this.userRepository.findOne({username:username});
-            }
-            const email = await this.userRepository.findOne({mail:username});
-            if(email!=null)
-            {
-                console.log("HERE2222222222222")
-                console.log(name)
-                return await this.userRepository.findOne({mail:username});
-            }
+        //     if(name!=null)
+        //     {
+        //         console.log("HERE1111111111111111")
+        //         console.log(name)
+        //         return await this.userRepository.findOne({username:username});
+        //     }
+        //     const email = await this.userRepository.findOne({mail:username});
+        //     if(email!=null)
+        //     {
+        //         console.log("HERE2222222222222")
+        //         console.log(name)
+        //         return await this.userRepository.findOne({mail:username});
+        //     }
 
             
             
-        }
+        // }
 
 
         // async update (id: number,data: SellerInfoInter) {
@@ -68,7 +68,7 @@ export class SellersService {
        
   
         async findAll(): Promise<any> {
-            console.log('find all')
+            
             let data = await this.sellerRepository.find() 
             return data;
         }
@@ -87,11 +87,11 @@ export class SellersService {
             newUser.cellNo=data.cellNo
             newUser.role="seller-admin"
             newUser.status="pending"
-            
+
             //data.category.push(datavalue)
             await this.userRepository.save(newUser);
 
-            console.log("NEW USER===========",newUser);
+            
             
 
             
@@ -101,7 +101,7 @@ export class SellersService {
             newSeller.CreatedBy = newUser.username
             newSeller.status="pending"
             
-            console.log("asdasdasdasd",newSeller);
+            
             // delete data.username;
             // delete data.password;
             // data.role = "sellerAdmin";
@@ -109,9 +109,7 @@ export class SellersService {
             // data.status = "0";
             await this.sellerRepository.save(newSeller);
 
-            console.log("New User===========",newUser)
-            
-            console.log("New Seller===========",newSeller)
+      
 
             const newSellerUser= new SellerUser()
 

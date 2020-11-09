@@ -57,7 +57,7 @@ export class CategoryController {
         return this.categoryService.findbyroot();
     }
 
-
+    @UsePipes(new ValidationPipe())
     @Post('createCategory')
     createcategory(@Body() user: categoryInterface):Promise<categoryInterface> {
         console.log("clalled mysql post")

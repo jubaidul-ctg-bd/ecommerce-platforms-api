@@ -9,8 +9,7 @@ export class UsersService {
     constructor(@InjectRepository(User,'ebhubon')private readonly userRepository: Repository<User>){}
 
     async authDecode( user: any) {
-        console.log(user)
-        console.log("ID==================",user._id)
+       
         //let sl = new sellerUser()
         //let { user_id,seller_id,createdAt,createdBy,updatedAt,updatedBy, ...result } = sl;
         //result = user._id
@@ -18,7 +17,7 @@ export class UsersService {
         let curUserDet= await this.userRepository.findOne(user._id)
         let reslut = new User()
         //const { password,username,DOB,, ...result } = reslut;
-        console.log("useruseruseruser", curUserDet);
+        
         
         // let x = user._id
         // console.log("FINDING Seller USER ID===========", new_user._id)
@@ -41,20 +40,18 @@ export class UsersService {
 
 
     async findUser(username: string): Promise<User> {
-        console.log("FINDING DETAILS",username)
+        
         const name = await this.userRepository.findOne({username:username});
-        console.log(name)
+        
         if(name!=null)
         {
-            console.log("HERE1111111111111111")
-            console.log(name)
+           
             return await this.userRepository.findOne({username:username});
         }
         const email = await this.userRepository.findOne({mail:username});
         if(email!=null)
         {
-            console.log("HERE2222222222222")
-            console.log(name)
+            
             return await this.userRepository.findOne({mail:username});
         }
         
@@ -110,9 +107,6 @@ export class UsersService {
   
 
     async create(data: UserInfoInter):Promise<User> {
-        //const user = this.usersRepository.create(data);
-        console.log("clalled mysql add method called")
-        console.log(data)
         return  this.userRepository.save(data);
         // await this.usersmRepository.save(data);
         // return user;

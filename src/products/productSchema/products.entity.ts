@@ -9,20 +9,18 @@ export class Product {
     @ObjectIdColumn()
     _id: ObjectID;
 
-    @Column()
-    id: string;
-
-    @IsNotEmpty()
-    @Column()
-    name : string;
-
     @IsNotEmpty()
     @Column()
     title: string;
 
     @Column()
     category: string;
+    
 
+    
+    //@IsNotEmpty()
+    @ObjectIdColumn()
+    sellerId: ObjectID;
 
     // @ObjectIdColumn()
     // categories_id: ObjectID;
