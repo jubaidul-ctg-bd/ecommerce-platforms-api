@@ -87,6 +87,7 @@ export class SellersService {
             newUser.cellNo=data.cellNo
             newUser.role="seller-admin"
             newUser.status="pending"
+            
             //data.category.push(datavalue)
             await this.userRepository.save(newUser);
 
@@ -199,7 +200,7 @@ export class SellersService {
                 return curSellerDet;
             }
             else{
-                return "Your account is " + curSellerDet.status
+                return "Your account status is " + curSellerDet.status
             }
             //const { password,username,DOB,, ...result } = reslut;
             // console.log("useruseruseruser", curUserDet);
@@ -220,5 +221,9 @@ export class SellersService {
             //     where:{seller_id:x},
             //   })
             }
+
+
+
+        
 
 }

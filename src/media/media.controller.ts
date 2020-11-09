@@ -1,14 +1,35 @@
-import { Body, Controller, Get, Param, Post, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Res, UploadedFile, UseInterceptors, Request } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express/multer/interceptors/file.interceptor';
 import { readdir, readdirSync, unlinkSync } from 'fs';
 import { join, parse } from 'path';
 import {diskStorage} from 'multer'
 import { MediaService } from './media.service';
 import { baseUrl }  from '../common/utils/config'
+import jwt_decode from 'jwt-decode';
+import { SellersService } from 'src/sellers/sellers.service';
+import {mkdirSync} from 'fs';
 
-
+import * as multer from 'jwt-decode'
 const directoryPath = join(process.cwd(), '/upload')
 const path=baseUrl+'/media/image/';
+
+// export const upload = multer({
+//     storage: multer.diskStorage({
+//       destination: (req, file, callback) => {
+//         let userId = req.user._id;
+//         let path = `./public/uploads//${userId}`;
+//         fs.mkdirsSync(path);
+//         callback(null, path);
+//       },
+//       filename: (req, file, callback) => {
+//         //originalname is the uploaded file's name with extn
+//         callback(null, file.originalname);
+//       }
+//     })
+//   });
+
+
+
 
 @Controller('media')
 export class MediaController {
@@ -89,19 +110,31 @@ export class MediaController {
     }
 
     
+    // async mediaSeller(@Request() req) {
+        //     console.log("current Seller Called===============")
+        //     const header = req.headers.authorization
+        //     const decoded = jwt_decode(header);
+        //     this._shopName = await this.mediaService.mediaSeller(decoded);
+        // }
 
     @Post('upload')
     @UseInterceptors(FileInterceptor('icon',
     {
         storage: diskStorage({
-          destination: 'upload', 
+        destination: (req, file, callback) => {
+            let dest = req.query.dest;
+            let path = `upload/${dest}`;
+            mkdirSync(path);
+            callback(null, path);
+            },
           filename: (req, file, cb) => {
           const randomName = parse(file.originalname).name.replace(" ", "-")+Date.now()+parse(file.originalname).ext;
           return cb(null, `${randomName}`)
         }
-        })
+        }) 
       }))
     uploadFile(@UploadedFile() file) {
+        console.log("FILE DETAILS==================",file)
         const response = {
             filename: file.originalname,
             //filename: file.filename,

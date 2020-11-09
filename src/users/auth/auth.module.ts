@@ -17,7 +17,7 @@ import { SellersModule } from 'src/sellers/sellers.module';
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '600s' },
+      signOptions: { expiresIn: '200h' },
 
     }),
   ],

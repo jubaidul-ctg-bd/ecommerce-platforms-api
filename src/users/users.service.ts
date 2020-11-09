@@ -83,6 +83,30 @@ export class UsersService {
         
         
     }
+
+
+
+    async findAdmin(username: string): Promise<User> {
+        console.log("FINDING DETAILS",username)
+        const name = await this.userRepository.findOne({username:username});
+        console.log(name)
+        if(name!=null)
+        {
+            // console.log("HERE1111111111111111")
+            // console.log(name)
+            return await this.userRepository.findOne({username:username});
+        }
+        const email = await this.userRepository.findOne({mail:username});
+        if(email!=null)
+        {
+            // console.log("HERE2222222222222")
+            // console.log(name)
+            return await this.userRepository.findOne({mail:username});
+        }
+        
+        
+    }
+  
   
 
     async create(data: UserInfoInter):Promise<User> {

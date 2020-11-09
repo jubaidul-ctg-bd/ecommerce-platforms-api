@@ -2,6 +2,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn, ObjectIdColumn, ObjectID, ManyToOne, OneToMany, Tree, JoinTable, JoinColumn, TreeChildren, TreeParent, IsNull, BaseEntity, ManyToMany } from 'typeorm';
 
 import {validate, validateOrReject, Contains, IsInt, Length, IsEmail, IsFQDN, IsDate, Min, Max, IsNotEmpty, IsDefined, isInt, min} from "class-validator";
+import { Product } from 'src/products/productSchema/products.entity';
 
  
 
@@ -77,8 +78,7 @@ export class Category {
 
 
 
-    // @ManyToOne(type=>products, products=>products._id)
-    // //@JoinTable()
-    // products:products;
+    // @ManyToOne(type=>Product, products=>products.categories)
+    // products:Product[];
     
 }

@@ -9,6 +9,8 @@ import {getConnection} from "typeorm";
 import { userInfo } from 'os';
 import { LOADIPHLPAPI } from 'dns';
 
+import {ObjectId,ObjectID as ObjID} from 'mongodb'
+
 @Injectable()
 export class CategoryService {
     constructor( @InjectRepository(Category,'ebhubon') private readonly categoryRepository: Repository<Category>,
@@ -73,6 +75,8 @@ export class CategoryService {
 
       //find entire category tree
       async getallChild(): Promise<any> {
+
+        console.log("ALL CHILD CALLED")
         let tree = []
         let subtree = []
         console.log("find all");
@@ -192,83 +196,31 @@ export class CategoryService {
       }
     
 
-      async create(data: any):Promise<any> {
-        //const user = this.usersRepository.create(data);
-        // console.log("clalled mysql add method called")
-        console.log(data)
-       
-        // console.log('parent id=============: ',data.parentId);
-        
-        // console.log('parent id type=============: ',typeof (data.parentId));
-        // console.log('parent category=================',data.parentCategory);
-        
-        
-          // var pCategory= await this.categoryRepository.findOne(data.parentId);
-          // console.log("PARENT DATA==================",pCategory);
-          if (data.parentCategories.length){
-          data.parentId = data.parentCategories[data.parentCategories.length-1]
-          // let user = new Category();
-          // user.parentId=data.parentId;
-          // user.slug=data.slug;
-          // user.status=data.status;
-          // user.title=data.title;
-          // user.icon = data.icon;
-          // user.image = data.image;
-          // user.banner = data.banner;
-          // user.order = data.order;
-
-          // var x = JSON.stringify(data)
-          // console.log("JSON AS STRING===========",typeof x)
-          // console.log("JSON AS STRING===========",x)
-          // var x = JSON.parse(x)
-          // console.log("JSON AS STRING===========",typeof x)
-          // console.log("JSON AS STRING===========",Object(x.parentId))
+      // async create(data: any):Promise<any> {
+      //     if (data.parentCategories){
+      //     data.parentId = new ObjID (data.parentCategories[data.parentCategories.length-1])
+      //   } else {
+      //    data.parentId = null
+      //   }
+      //   const new_category = await  this.categoryRepository.save(data);
+      //   return data;
 
 
-          const categoryx = await  this.categoryRepository.save(data);
-         // data.parentCategory=pCategory;
-          // delete data.parentId;
-          return data;
-        }
-        
-        
-        
-        data.parentId = null
-        const new_category = await  this.categoryRepository.save(data);
-        return data;
+      // }
 
-        // console.log("CATEGORY CREATED =========",category)
-        
-        // if( pCategory &&  data.parentId){
-        //   console.log("CONFIRM HAVING ")
-        //   if(!pCategory.childCategories || !pCategory.childCategories.length){
-        //     pCategory.childCategories=[];
-        //   }
-        //    //pCategory.childCategories.push(category);
-          
-        //   console.log('pcategory id: ',pCategory._id);
-        //   await this.categoryRepository.update(pCategory._id,pCategory)
-        // }
-        
-        ///return await this.categoryRepository.findOne(pCategory._id);
-        
-
-
-      }
-
+      //creating fresh category
       async createcategory(data: any):Promise<any> {
         //const user = this.usersRepository.create(data);
         console.log("clalled mysql add method called")
         console.log(data)
         console.log(data.parentCategories)
-        if (data.parentCategories.length){
-          data.parentId = data.parentCategories[data.parentCategories.length-1]
+        if (data.parentCategories){
+          data.parentId  =new  ObjID (data.parentCategories[data.parentCategories.length-1])
         }
         else{
         data.parentId = null
         }
-        const new_category = await  this.categoryRepository.save(data);
-        return data;
+        return await this.categoryRepository.save(data)
       }
 
       

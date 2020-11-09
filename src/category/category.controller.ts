@@ -40,14 +40,14 @@ export class CategoryController {
 
 
     
-    @Post('create')
-    @UsePipes(new ValidationPipe())
-    create(@Body() user: Category ):Promise<Category> {
-        console.log("category created")
-        console.log("category created=========",user)
+    // @Post('create')
+    // @UsePipes(new ValidationPipe())
+    // create(@Body() user: Category ):Promise<Category> {
+    //     console.log("category created")
+    //     console.log("category created=========",user)
 
-        return this.categoryService.create(user);
-    }
+    //     return this.categoryService.create(user);
+    // }
 
 
 

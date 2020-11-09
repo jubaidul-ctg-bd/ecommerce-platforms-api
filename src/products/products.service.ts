@@ -4,7 +4,7 @@ import { config } from 'process';
 import { Category } from 'src/category/categorySchema/category.entity';
 import { Repository } from 'typeorm';
 import { Product } from './productSchema/products.entity';
-
+import {ObjectId,ObjectID as ObjID} from 'mongodb'
 @Injectable()
 export class ProductsService {
 
@@ -41,42 +41,52 @@ export class ProductsService {
         await this.productRepository.delete(id);
       }
 
-      async create(data: Product):Promise<Product> {
+      async create(data: any):Promise<any> {
         //const user = this.usersRepository.create(data);
-        console.log("clalled mysql add method called")
-        console.log(data)
-        console.log(data.category)
-        console.log(typeof data.category)
-        
-        let lastidx = data.category[data.category.length-1]
-        console.log("LAST IDX VALUE==========", lastidx);
+        // console.log("clalled mysql add method called")
+        // console.log(data)
+        // console.log(data.category)
+        // console.log(typeof data.category)
 
-        let datavalue= await this.categoryRepository.findOne({
-        where:{title:lastidx}})
-        console.log('category:',datavalue);
-        console.log('category ID========================:',datavalue._id);
-        
-        
-        data.categoryId = datavalue._id;
-        var temp = [] 
-        
-
-        for(let i=0; i<data.category.length-1; i++)
-        {
-          let name = data.category[i];
-          console.log("CATEGORY NAME==========",data.category[i])
-          const categoryID = await this.categoryRepository.findOne({
-            where:{title:name}})
-            temp[i] = String(categoryID._id)
-            
+        console.log(data.categories)
+        if (data.categories){
+          data.categoryId  =new  ObjID (data.categories[data.categories.length-1])
         }
-        data.category = Object (temp)
-        console.log(data.category.length);
-        //data.category.push(datavalue)
-        return  this.productRepository.save(data);
-        // await this.usersmRepository.save(data);
-        // return user;
-        //return user;
+        else{
+          data.categoryId = null
+        }
+        return await this.productRepository.save(data)
+
+        
+        // let lastidx = data.category[data.category.length-1]
+        // console.log("LAST IDX VALUE==========", lastidx);
+
+        // let datavalue= await this.categoryRepository.findOne({
+        // where:{title:lastidx}})
+        // console.log('category:',datavalue);
+        // console.log('category ID========================:',datavalue._id);
+        
+        
+        // data.categoryId = datavalue._id;
+        // var temp = [] 
+        
+
+        // for(let i=0; i<data.category.length-1; i++)
+        // {
+        //   let name = data.category[i];
+        //   console.log("CATEGORY NAME==========",data.category[i])
+        //   const categoryID = await this.categoryRepository.findOne({
+        //     where:{title:name}})
+        //     temp[i] = String(categoryID._id)
+            
+        // }
+        // data.category = Object (temp)
+        // console.log(data.category.length);
+        // //data.category.push(datavalue)
+        // return  this.productRepository.save(data);
+        // // await this.usersmRepository.save(data);
+        // // return user;
+        // //return user;
       }
 
 

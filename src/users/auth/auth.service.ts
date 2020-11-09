@@ -31,19 +31,30 @@ export class AuthService {
     }
 
     
-    const nuser = await this.usersService.findSeller(username);
-    if (nuser && nuser.password === pass)  {
+    const newUser = await this.usersService.findSeller(username);
+    if (newUser && newUser.password === pass)  {
       console.log("auth service recalled for checking")
-    const result = nuser;
+    const result = newUser;
 
     console.log("auth service recalled with valid user details from database ")
     return result;
   }
+
+
+  const newAdmin = await this.usersService.findAdmin(username);
+    if (newAdmin && newAdmin.password === pass && newAdmin.role=="admin")  {
+      console.log("auth service recalled for checking")
+    const result = newAdmin;
+
+    console.log("auth service recalled with valid user details from database ")
+    return result;
+  }
+
     return null;
   }
 
   async login(user: any) {
-    const payload = { mail: user.mail, username: user.username , _id: user._id  };
+    const payload = { mail: user.mail, username: user.username , _id: user._id ,role: user.role };
     console.log("payload from login")
     // console.log(user.useremail)
     // console.log(user.username)
@@ -55,6 +66,7 @@ export class AuthService {
     }
     return {
       status: "ok",
+      role: user.role,
       access_token: this.jwtService.sign(payload),
     };
   }

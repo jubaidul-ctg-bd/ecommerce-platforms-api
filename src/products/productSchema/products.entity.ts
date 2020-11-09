@@ -1,5 +1,6 @@
 
 import { IsNotEmpty } from 'class-validator';
+import { Category } from 'src/category/categorySchema/category.entity';
 import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn, ObjectIdColumn, ObjectID, ManyToMany, JoinTable, OneToMany } from 'typeorm';
 
 @Entity()
@@ -63,8 +64,7 @@ export class Product {
     updatedBy: string;
 
     
-    // @OneToMany(type=>category,category=>category._id)
-    // @JoinTable()
-    // category: category[];
+    // @OneToMany(type=>Category, category=>category.products)
+    // categories: Category;
     
 }
