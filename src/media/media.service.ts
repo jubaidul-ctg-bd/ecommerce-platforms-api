@@ -15,27 +15,14 @@ export class MediaService {
 
 
     async mediaSeller( user: any) {
-        var assignedSellerInfo = await this.sellerUserRepository.findOne({where:{userId:user._id}});
-        console.log("FOUNDED DETAILS==============",assignedSellerInfo)
-        if(assignedSellerInfo==null)
-        {
-            return "No Seller found"
-        }
-        else{
-        let curSellerDet= await this.sellerRepository.findOne(assignedSellerInfo.sellerId);
-        //console.log("Current USER DETAILS================",curUserDet)
-        if(curSellerDet.status=='approved'){
-
-            return curSellerDet.shopName;
-        }
-        else{
-            return "Your account status is " + curSellerDet.status
-        }
+        console.log("payload==========", user);
+        var assignedSellerInfo = await this.sellerRepository.findOne(user.sl);
+        console.log("assignedSellerInfo.shopName", assignedSellerInfo.shopName);
         
-        
-        }
-    
+        return assignedSellerInfo.shopName;
     }
-
     
 }
+
+    
+

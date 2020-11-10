@@ -120,10 +120,8 @@ export class SellersService {
         delete x.status;
         //delete x.cellNo;
         //delete x.mail;
-        console.log("x======", x);
 
         let xup = await this.sellerRepository.update(x, data[key]);
-        console.log("Vlaue=================", xup)
       }
     }
     return data;
@@ -135,15 +133,7 @@ export class SellersService {
 
 
   async sellerDetail(user: any) {
-    console.log(user)
-    console.log("ID==================", user._id)
-    //let sl = new sellerUser()
-    //let { user_id,seller_id,createdAt,createdBy,updatedAt,updatedBy, ...result } = sl;
-    //result = user._id
-    //console.log("xxxxxxxxxxxxxxxxx",user._id)
-
     var assignedSellerInfo = await this.sellerUserRepository.findOne({ where: { userId: user._id } });
-    console.log("FOUNDED DETAILS==============", assignedSellerInfo)
     if (assignedSellerInfo == null) {
       return "No Seller found"
     }

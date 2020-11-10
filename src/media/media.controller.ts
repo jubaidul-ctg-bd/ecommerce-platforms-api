@@ -39,10 +39,11 @@ export class MediaController {
 
     @Get('media')
     async findall(@Request() req, @Res() res) {
-        console.log("current Seller Called===============")
+        //console.log("current Seller Called===============")
         const header = req.headers.authorization
         const decoded = jwt_decode(header);
         const shopName = await this.mediaService.mediaSeller(decoded);
+        console.log("SHOPENAMEEEEEEEEEEEEEEEEEEEE",shopName)
         if(shopName) {
             var directoryPath = join(process.cwd(), '/upload/'+shopName);
         } else {
@@ -89,9 +90,9 @@ export class MediaController {
     // async seeUploadedFile(@Param('imgpath') abs, @Res() res) {
     async seeUploadedFile(@Request() abs, @Res() res) {
         
-        console.log("lHeader========", abs);
+        //console.log("lHeader========", abs);
         const url = abs.query.url;
-        console.log("urllllllllllllll", url);
+       // console.log("urllllllllllllll", url);
         
         // const header = abs.headers.authorization
         // const decoded = jwt_decode(header);
@@ -110,7 +111,7 @@ export class MediaController {
         } else {
             var directoryPath = join(process.cwd(), '/upload/categoryImages');
         }
-        console.log(body);
+        //console.log(body);
         return unlinkSync(directoryPath+'/'+body.name)
     }
 
@@ -150,8 +151,8 @@ export class MediaController {
             filename: file.originalname,
             //filename: file.filename,
         };
-        console.log("response=======", response);
-        console.log("file=======", file);
+        //console.log("response=======", response);
+        //console.log("file=======", file);
         return response;
     }
 

@@ -23,7 +23,7 @@ import { Seller } from 'src/sellers/sellerSchema/seller.entity';
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '200h' },
+      signOptions: { expiresIn: '600000000s' },
 
     }),
   ],

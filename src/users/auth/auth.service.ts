@@ -27,6 +27,15 @@ export class AuthService {
 
     var user = await this.usersService.findUser(username);
     
+    // const match = await bcrypt.compare(pass, user.password);
+    // if(match)
+    // {
+    //   console.log("PASS")
+    // }
+    // else
+    // {
+    //   console.log("problem")
+    // }
     //console.log("DATABASE PASSWORD=========",user.password)
     //console.log("Decript PASSWORD=========",user)
     
