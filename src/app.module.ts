@@ -40,7 +40,7 @@ import { User } from './users/userSchema/user.entity';
         port: 27017,
         database: 'ebhubon',
         entities: [Category,User,Seller,Product,SellerUser],
-        synchronize: false,
+        synchronize: true,
         useNewUrlParser: true,
         logging: true,
         //autoLoadEntities: true,

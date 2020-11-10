@@ -5,15 +5,11 @@ import { StringDecoder } from 'string_decoder';
 import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn, ObjectIdColumn, ObjectID, ManyToMany, OneToMany, ManyToOne, BeforeInsert, Unique, Index } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 @Entity()
-@Unique("UQ_EMAIL",["mail"])
-@Unique("UQ_cellNo",["cellNo"])
+@Unique("UQ_EMAIL",["mail","cellNo"])
 export class User {
   @ObjectIdColumn()
     _id: ObjectID;
 
-
-  @Column()
-  username: string;
 
   @IsNotEmpty()
   @Column()

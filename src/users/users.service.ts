@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { config } from 'process';
 import { Repository } from 'typeorm';
 import { User } from './userSchema/user.entity';
 import { UserInfoInter } from './userSchema/user.interface';
@@ -10,104 +11,47 @@ export class UsersService {
 
     async authDecode( user: any) {
        
-        //let sl = new sellerUser()
-        //let { user_id,seller_id,createdAt,createdBy,updatedAt,updatedBy, ...result } = sl;
-        //result = user._id
-        //console.log("xxxxxxxxxxxxxxxxx",user._id)
         let curUserDet= await this.userRepository.findOne(user._id)
         let reslut = new User()
-        //const { password,username,DOB,, ...result } = reslut;
         
-        
-        // let x = user._id
-        // console.log("FINDING Seller USER ID===========", new_user._id)
-        // //console.log("FINDING USER ID===========", new_user.user_id)
-        // //console.log("FINDING Seller ID===========", new_user.seller_id)
-        // let seller= await this.sellerinfoRepository.findOne({
-        //     where:{_id:new_user.seller_id}})
-
-        //console.log("sellersellersellersellerseller", seller)
-        // let seller = this.sellerUserRepository.findOne((new_user.seller_id))
         return curUserDet;
-        // return this.sellerUserRepository.findOne({
-        //     where:{user_id:x}});
-        // return await this.sellerUserRepository.findOne({
-        //     where:{seller_id:x},
-        //   })
+        
         }
-
-
-
-
+        // const name = await this.userRepository.find({
+        //     where: [
+        //       { username: username, password: password },
+        //       { mail: username, password: password },
+        //       { cellNo: username, password: password }
+        //     ]
+        //   });
     async findUser(username: string): Promise<User> {
         
-        const name = await this.userRepository.findOne({username:username});
-        
+        const name = await this.userRepository.findOne({cellNo:username});
         if(name!=null)
         {
-           
-            return await this.userRepository.findOne({username:username});
+            return await this.userRepository.findOne({cellNo:username});
         }
         const email = await this.userRepository.findOne({mail:username});
         if(email!=null)
         {
-            
             return await this.userRepository.findOne({mail:username});
         }
         
         
     }
 
-
-
-    async findSeller(username: string): Promise<User> {
-        console.log("FINDING DETAILS",username)
-        const name = await this.userRepository.findOne({username:username});
-        console.log(name)
-        if(name!=null)
-        {
-            console.log("HERE1111111111111111")
-            console.log(name)
-            return await this.userRepository.findOne({username:username});
-        }
-        const email = await this.userRepository.findOne({mail:username});
-        if(email!=null)
-        {
-            console.log("HERE2222222222222")
-            console.log(name)
-            return await this.userRepository.findOne({mail:username});
-        }
+    async create(data: User):Promise<User> {
         
+        let userData : any = ""
+        try{
+            data.username = data.mail
+            userData  = await this.userRepository.save(data);
+        }catch(err) {
+            console.log("ERROR=======================",err)
+            return err.writeErrors[0].errmsg        
         
-    }
-
-
-
-    async findAdmin(username: string): Promise<User> {
-        console.log("FINDING DETAILS",username)
-        const name = await this.userRepository.findOne({username:username});
-        console.log(name)
-        if(name!=null)
-        {
-            // console.log("HERE1111111111111111")
-            // console.log(name)
-            return await this.userRepository.findOne({username:username});
         }
-        const email = await this.userRepository.findOne({mail:username});
-        if(email!=null)
-        {
-            // console.log("HERE2222222222222")
-            // console.log(name)
-            return await this.userRepository.findOne({mail:username});
-        }
-        
-        
-    }
-  
-  
-
-    async create(data: UserInfoInter):Promise<User> {
-        return  this.userRepository.save(data);
+        return await userData
         // await this.usersmRepository.save(data);
         // return user;
         //return user;

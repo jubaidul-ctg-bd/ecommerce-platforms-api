@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards ,Request, Get, Param, Put, UsePipes, ValidationPipe} from '@nestjs/common';
+import { Body, Controller, Post, UseGuards ,Request, Get, Param, Put, UsePipes, ValidationPipe, HttpException, HttpStatus} from '@nestjs/common';
 import { config } from 'process';
 
 import { AuthService } from 'src/users/auth/auth.service';
@@ -20,8 +20,17 @@ export class SellersController {
 
     @UsePipes(new ValidationPipe())
     @Post('registration')
-    createfirst(@Body() user: SellerInfoInter): Promise<Seller> {
-        return this.sellerInfoService.create(user);
+    async createfirst(@Body() user: SellerInfoInter): Promise<Seller> {
+       // console.log("SERLLER RGISTAION==========",user)
+        let newUser : any = {}
+        try{
+              newUser = await this.sellerInfoService.create(user);;
+        }catch(err){
+            //throw new HttpException(err,HttpStatus.CONFLICT)
+            console.log("error=================",err)
+            return err.errmsg
+        }
+        return newUser
     }
 
     @Get('all')

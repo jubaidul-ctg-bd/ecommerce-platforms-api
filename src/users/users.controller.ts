@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Post,Request, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Post,Request, Res, UseGuards, UsePipes, ValidationPipe,HttpException } from '@nestjs/common';
 import { AuthService } from './auth/auth.service';
 import { LocalAuthGuard } from './auth/local-auth.guard';
 import { User } from './userSchema/user.entity';
 import { UsersService } from './users.service';
 import jwt_decode from 'jwt-decode';
+
 @Controller('user')
 export class UsersController {
 
@@ -12,8 +13,16 @@ export class UsersController {
 
     @UsePipes(new ValidationPipe())
     @Post('registration')
-    createfirst(@Body() user: User) {
-        return this.userInfoService.create(user);
+    async createfirst(@Body() user: User) {
+      //console.log("SERLLER CONTROLLR CALLED",user)
+        let newUser : any = {}
+        try{
+              newUser = await this.userInfoService.create(user);
+        }catch(err){
+            //console.log("ERROR================",err)
+            return err;
+        }
+        return await newUser
     }
     
 

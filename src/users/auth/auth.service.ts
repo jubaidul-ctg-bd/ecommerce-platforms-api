@@ -27,8 +27,8 @@ export class AuthService {
 
     var user = await this.usersService.findUser(username);
     
-    // console.log("DATABASE PASSWORD=========",user.password)
-    // console.log("Decript PASSWORD=========",newPassword)
+    //console.log("DATABASE PASSWORD=========",user.password)
+    //console.log("Decript PASSWORD=========",user)
     
     if (user && user.password === pass)  {
 

@@ -1,19 +1,26 @@
-
-
-
 import { StringDecoder } from 'string_decoder';
-import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn, ObjectIdColumn, ObjectID, OneToOne, JoinColumn, OneToMany, JoinTable, ManyToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn, ObjectIdColumn, ObjectID, OneToOne, JoinColumn, OneToMany, JoinTable, ManyToMany, Unique } from 'typeorm';
 import { IsDefined, IsNotEmpty } from 'class-validator'
 import { User } from 'src/users/userSchema/user.entity';
 
+
 @Entity()
+@Unique("UQ_Seller",["shopName"])
 export class Seller  {
   @ObjectIdColumn()
   _id: ObjectID;
 
+
+  @Column({name: "shopName"})
   @IsDefined()
-  @Column()
+  @IsNotEmpty()
   shopName: string;
+
+  @Column()
+  cellNo: string;
+
+  @Column()
+  mail: string;
 
   @Column()
   address: string;
