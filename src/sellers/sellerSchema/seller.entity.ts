@@ -26,6 +26,9 @@ export class Seller  {
   address: string;
 
   @Column()
+  folderName: string;
+
+  @Column()
   CreatedBy: string;
 
   @Column()

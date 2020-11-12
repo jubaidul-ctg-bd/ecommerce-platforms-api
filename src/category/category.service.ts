@@ -54,19 +54,13 @@ export class CategoryService {
         let data= await this.categoryRepository.findOne({
           where:{title:username},
         })
-       
         console.log("Data==============", data);
-        
         let pID = data._id;
         console.log(pID);
-
         const sub_category=await this.categoryRepository.find({
           where:{parentId:pID},
         })
-
         console.log("SUB CATEGORYS=============",sub_category);
-
-
         return sub_category;
         //await this.categoryRepository.delete(name);
 
@@ -75,22 +69,12 @@ export class CategoryService {
 
       //find entire category tree
       async getallChild(): Promise<any> {
-
         console.log("ALL CHILD CALLED")
-        let tree = []
-        let subtree = []
         console.log("find all");
-
         let parent=await this.categoryRepository.find({
           where:{parentId:null},
         })
-        
-        console.log("PARENT============",parent)
-
-
-        // function recursion() {
-        // }
-
+        //console.log("PARENT============",parent)
         for(let i=0; i<parent.length; i++)
         {
           parent[i].parentId = null;
@@ -215,7 +199,7 @@ export class CategoryService {
         console.log(data)
         console.log(data.parentCategories)
         if (data.parentCategories){
-          data.parentId  =new  ObjID (data.parentCategories[data.parentCategories.length-1])
+          data.parentId  = (data.parentCategories[data.parentCategories.length-1])
         }
         else{
         data.parentId = null
@@ -229,22 +213,14 @@ export class CategoryService {
         let parent=await this.categoryRepository.find({
           where:{parentId:null},
         })
-        
         console.log("PARENT============",parent)
-
-
-        // function recursion() {
-        // }
-
         for(let i=0; i<parent.length; i++)
         {
           parent[i].parentId = null;
           let child=await this.categoryRepository.find({
             where:{parentId:parent[i]._id},
           })    
-
           parent[i].children=child;
-          
           if(child!=null)
           {
              for(let j=0; j<child.length; j++)
@@ -255,7 +231,6 @@ export class CategoryService {
               child[j].children=subchild;
              }
           }
-
           // subtree.concat(child)
           // console.log(child)
           // //console.log("FIRST VALUE============", data[i].parentId);
@@ -271,20 +246,14 @@ export class CategoryService {
         //return this.categoryRepository.findOne({parentId: null});
       }
 
-
-
       //update
       async update(data: any) {
-
         console.log("status", data["status"]);
-        
-        
         for (let key in data) {
             if (data.hasOwnProperty(key) && key!="status") {
                 data[key].status = data["status"];
                 data[key].updatedAt= new Date()
-                
-
+                data[key].updatedBy = data.mail
                 // let sellerId = new sellers();
                 // sellerId._id =data[key]._id;
                 // sellerId._id = data[key]._id 
@@ -300,7 +269,6 @@ export class CategoryService {
                 //delete x.cellNo;
                 //delete x.mail;
                 console.log("x======",x);
-
                 let xup = await this.categoryRepository.update(x,data[key]); 
                 console.log("Vlaue=================",xup)
             }

@@ -21,10 +21,10 @@ import { categoryUpdateMiddleware } from './middleware/categoryUpdate.middleware
 })
 export class CategoryModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
-      consumer
-        .apply(categoryCreateMiddleware)
-        .forRoutes({path: 'category/create',method:RequestMethod.POST},
-        {path: 'category/createCategory',method:RequestMethod.POST});
+    //   consumer
+    //     .apply(categoryCreateMiddleware)
+    //     .forRoutes({path: 'category/create',method:RequestMethod.POST},
+    //     {path: 'category/createCategory',method:RequestMethod.POST});
         // consumer
         // .apply(categoryUpdateMiddleware)
         // .forRoutes({path: 'products/delete',method:RequestMethod.PUT},

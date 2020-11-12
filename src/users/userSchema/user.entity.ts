@@ -20,10 +20,10 @@ export class User {
   password: string;
 
 
-  // @BeforeInsert()
-  // async beforeInsert() {
-  //   this.password = await bcrypt.hash(this.password, 12);
-  // }
+  @BeforeInsert()
+  async beforeInsert() {
+    this.password = await bcrypt.hash(this.password, 8);
+  }
 
   @Column({ name : "cellNo"})
   @IsNotEmpty()
@@ -47,7 +47,7 @@ export class User {
   @Column()
   nationality: string;
 
-  @IsDefined()
+  
   @Column({default:"user"})
   role: string;
 

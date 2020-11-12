@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { config } from 'process';
-import { Repository } from 'typeorm';
+import { Repository, TreeLevelColumn } from 'typeorm';
 import { User } from './userSchema/user.entity';
 import { UserInfoInter } from './userSchema/user.interface';
 
@@ -10,46 +10,54 @@ export class UsersService {
     constructor(@InjectRepository(User,'ebhubon')private readonly userRepository: Repository<User>){}
 
     async authDecode( user: any) {
-       
         let curUserDet= await this.userRepository.findOne(user._id)
-        let reslut = new User()
-        
+        console.log("CURRENT USER DETAILS=================,",curUserDet)
         return curUserDet;
-        
-        }
-        // const name = await this.userRepository.find({
-        //     where: [
-        //       { username: username, password: password },
-        //       { mail: username, password: password },
-        //       { cellNo: username, password: password }
-        //     ]
-        //   });
+    }
+
+   
     async findUser(username: string): Promise<User> {
         
         const name = await this.userRepository.findOne({cellNo:username});
         if(name!=null)
         {
-            return await this.userRepository.findOne({cellNo:username});
+            return name
         }
         const email = await this.userRepository.findOne({mail:username});
         if(email!=null)
         {
-            return await this.userRepository.findOne({mail:username});
+            return email
         }
+
+        // const name = await this.userRepository.find({
+        //     where: [
+        //         { username: username},
+        //         { mail: username},
+        //         { cellNo: username}
+        //     ]
+        //     });
+
+        // return 
         
         
     }
 
     async create(data: User):Promise<User> {
-        
         let userData : any = ""
         try{
-            data.username = data.mail
-            userData  = await this.userRepository.save(data);
+            const newUser = new User()
+            newUser.username = data.mail
+            newUser.password = data.password
+            newUser.mail = data.mail
+            newUser.cellNo = data.cellNo
+            newUser.DOB = data.DOB
+            newUser.address = data.address
+            newUser.CreatedAt = String (new Date())
+            newUser.CreatedBy = data.address
+            if(!newUser.role) newUser.role = "user"
+            userData  = await this.userRepository.save(newUser);
         }catch(err) {
-            console.log("ERROR=======================",err)
             return err.writeErrors[0].errmsg        
-        
         }
         return await userData
         // await this.usersmRepository.save(data);

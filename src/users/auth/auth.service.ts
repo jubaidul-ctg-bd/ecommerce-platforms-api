@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Catch, Injectable } from '@nestjs/common';
 import { UsersService } from '../users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -26,26 +26,19 @@ export class AuthService {
     // let newPassword = await bcrypt.hash(pass, 12);
 
     var user = await this.usersService.findUser(username);
-    
-    // const match = await bcrypt.compare(pass, user.password);
-    // if(match)
-    // {
-    //   console.log("PASS")
-    // }
-    // else
-    // {
-    //   console.log("problem")
-    // }
-    //console.log("DATABASE PASSWORD=========",user.password)
-    //console.log("Decript PASSWORD=========",user)
-    
-    if (user && user.password === pass)  {
 
-      const result = user;
-      return result;
+    try {
+      const match = await bcrypt.compare(pass, user.password);
+      if (user && match)  {
+
+        const result = user;
+        return result;
+      }
+    } catch(err) {
+      return null;
     }
-
-    return null;
+    
+   
   }
 
   async login(user: any,useragent : string) {
@@ -57,41 +50,47 @@ export class AuthService {
       return "Username or password mismatched"
     }
     
+    let sUser = new SellerUser()
     if(useragent && useragent=='seller'){
         
         // find at selleruser if not found then you are not authorized
         var currentId = String(user._id)
-        console.log("TYPE OFFF===============",typeof currentId, currentId);
+        // console.log("TYPE OFFF===============",typeof currentId, currentId);
         
-        var sellerUser: any= await this.sellerUserRepository.find({
+        sUser = await this.sellerUserRepository.findOne({
           where:{userId:currentId},
         })
 
-        console.log("sellerUser", sellerUser);
+        // console.log("sellerUser", sUser);
+        // console.log("sellerUserId================", sUser);
+
         
         
-        if(!sellerUser){
+        if(!sUser){
           return "You are not authorized yet"
         }
         else
         {
-          var sellerUserId=  sellerUser.sellerId
+          var sellerUserId=  sUser.sellerId
+          // console.log("sellerUserId================", sellerUserId);
+          
           const seller: any = await this.sellerRepository.findOne(sellerUserId)
 
-          console.log("seller Details", sellerUser);
-          console.log("seller.status", seller.status);
-          console.log("seller.status", seller);
+          // console.log("seller Details", sellerUser);
+          // console.log("seller.status", seller.status);
+          // console.log("seller.status", seller);
           
-          if(seller.status!="approved") {
+          if( !(seller.status=="approved" || seller.status=="pending") ) {
             return "the seller is " + seller.status+ ", please contact with system admin"
           }
           else{
-            payload['sl'] = seller._id
+            payload['sl'] = sellerUserId
           }
         }
         // if found then find the seller is active or not, if not then send a message, the seller is not activated yet, please contact with system admin
     }
-    console.log("UGER AGENT IS NOT SELLER==================")
+    else if(useragent && useragent=='user') {} 
+    else if(useragent && useragent=='admin') {}
     return {
       status: "ok",
       role: user.role,

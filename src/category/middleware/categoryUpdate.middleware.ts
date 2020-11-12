@@ -6,7 +6,7 @@ import {Request} from 'express'
 export class categoryUpdateMiddleware implements NestMiddleware {
   use(req: Request, res: any, next: () => void) {
     console.log("UPDATED MIDDLEWARE HAVE BEEN CALLED");
-    var updatedby = req.body.username
+    var updatedby = req.body.mail
     var updatedat = new Date()
     req.body.UpdatedBy = updatedby
     req.body.UpdatedAt = String(updatedat)

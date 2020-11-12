@@ -19,13 +19,13 @@ import { productUpdateMiddleware } from './middleware/productUpdate.middleware';
 })
 export class ProductsModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
-      consumer
-        .apply(productCreateMiddleware)
-        .forRoutes({path: 'products/create',method:RequestMethod.POST});
-        consumer
-        .apply(productUpdateMiddleware)
-        .forRoutes({path: 'products/delete',method:RequestMethod.PUT},
-        {path: 'products/update',method:RequestMethod.PUT});
+    //   consumer
+    //     .apply(productCreateMiddleware)
+    //     .forRoutes({path: 'products/create',method:RequestMethod.POST});
+    //     consumer
+    //     .apply(productUpdateMiddleware)
+    //     .forRoutes({path: 'products/delete',method:RequestMethod.PUT},
+    //     {path: 'products/update',method:RequestMethod.PUT});
   
     //   consumer
     //   .apply(CatUpdatedMiddleware)

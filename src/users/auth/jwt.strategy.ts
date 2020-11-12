@@ -8,7 +8,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
     console.log("HERE")
     super({
-
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
       secretOrKey: jwtConstants.secret,
@@ -16,7 +15,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    console.log("PROFILE CLICKED")
-    return {mail: payload.email, username: payload.username , role: payload.role};
+    //console.log("PROFILE CLICKED=============,",payload)
+    //console.log("p=============,",...payload)
+    return payload;
   }
 }

@@ -16,20 +16,6 @@ export class ProductsService {
     async findAll(): Promise<Product[]> {
 
         let allProducts = await this.productRepository.find();
-        // var temp = [] 
-        // var i=0;
-        // for (let entry of allProducts) {
-        //   console.log("OBJECT ==========",entry); 
-        //   const categorytitle = await this.categoryRepository.findOne({
-        //     where:{_id:entry._id}})
-        //     console.log("PRODUCT CATEGORY===========",categorytitle)
-        //     temp[i] = entry
-        //     temp[i].categoryId = categorytitle.title
-        //     i++
-        // }
-        // allProducts = Object (temp)
-        // console.log(typeof allProducts)
-        // console.log(allProducts);
         return allProducts; 
       }
 
@@ -37,21 +23,8 @@ export class ProductsService {
 
       async findCurrentSeller(decode: any): Promise<Product[]> {
 
-        let allProducts = await this.productRepository.find({where:{shopId: decode._id}});
-        // var temp = [] 
-        // var i=0;
-        // for (let entry of allProducts) {
-        //   console.log("OBJECT ==========",entry); 
-        //   const categorytitle = await this.categoryRepository.findOne({
-        //     where:{_id:entry._id}})
-        //     console.log("PRODUCT CATEGORY===========",categorytitle)
-        //     temp[i] = entry
-        //     temp[i].categoryId = categorytitle.title
-        //     i++
-        // }
-        // allProducts = Object (temp)
-        // console.log(typeof allProducts)
-        // console.log(allProducts);
+        let allProducts = await this.productRepository.find({where:{sellerId: decode.sl}});
+        console.log("ALL PRODUCTS=============",allProducts)
         return allProducts; 
       }
 
@@ -64,21 +37,21 @@ export class ProductsService {
       }
 
       async create(data: any, decoded: any):Promise<any> {
-        //const user = this.usersRepository.create(data);
-        // console.log("clalled mysql add method called")
-        // console.log(data)
-        // console.log(data.category)
-        // console.log(typeof data.category)
 
         console.log(data.categories)
         if (data.categories){
-          data.categoryId  = new  ObjID (data.categories[data.categories.length-1])
+          data.categoryId  =  (data.categories[data.categories.length-1])
+          let productCategory = await this.categoryRepository.findOne(data.categoryId)
+          data.categoryTitle = productCategory.title
+          
         }
         else{
           data.categoryId = null
         }
 
-        data.sellerId =  new  ObjID (decoded.sl)
+        data.sellerId =  decoded.sl
+        data.createdAt = new Date()
+        data.createdBy = data.mail
         return await this.productRepository.save(data)
 
         
@@ -123,6 +96,8 @@ export class ProductsService {
         for (let key in data) {
             if (data.hasOwnProperty(key) && key!="status") {
                 data[key].status = data["status"];
+                data[key].UpdateBy = data.mail
+                data[key].UpdatedAt = new Date()
                 // let sellerId = new sellers();
                 // sellerId._id =data[key]._id;
                 // sellerId._id = data[key]._id 

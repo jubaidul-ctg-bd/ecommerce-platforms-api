@@ -8,7 +8,7 @@ export class categoryCreateMiddleware implements NestMiddleware {
   use(req: Request, res: any, next: () => void) {
     console.log("CREATED MIDDLEWARE HAVE BEEN CALLED")  
     console.log('req body in create middleware:',req.body)
-    var cratedByy = req.body.username
+    var cratedByy = req.body.mail
     var createdAt = new Date()
     req.body.CreatedBy = cratedByy
     req.body.CreatedAt = String(createdAt)

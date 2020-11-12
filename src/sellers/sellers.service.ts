@@ -53,23 +53,26 @@ export class SellersService {
     try {
 
       //creating new user
-      const newUser :any = new User()
+      const newUser  = new User()
       newUser.username = data.username
       newUser.password = data.password
       newUser.mail = data.mail
       newUser.cellNo = data.cellNo
       newUser.role = "seller-admin"
       newUser.status = "pending"
+      newUser.CreatedAt = String(new Date())
+      newUser.UpdatedAt = data.mail
       userData = await this.userRepository.save(newUser);
 
       //creating new seller
       const newSeller = new Seller()
       newSeller.shopName = data.shopName
       newSeller.CreatedAt = String(new Date())
-      newSeller.CreatedBy = newUser.username
+      newSeller.CreatedBy = data.mail
       newSeller.status = "pending"
       newSeller.mail = data.mail
       newSeller.cellNo = data.cellNo
+      newSeller.folderName = data.shopName + Date.now()
       sellerData = await this.sellerRepository.save(newSeller);
 
       const newSellerUser = new SellerUser()
@@ -103,6 +106,8 @@ export class SellersService {
     for (let key in data) {
       if (data.hasOwnProperty(key) && key != "status") {
         data[key].status = data["status"];
+        data[key].updatedAt = new Date()
+        data[key].updatedBy = data.mail
         //data[key].updatedAt= new Date()
 
 
@@ -133,30 +138,8 @@ export class SellersService {
 
 
   async sellerDetail(user: any) {
-    var assignedSellerInfo = await this.sellerUserRepository.findOne({ where: { userId: user._id } });
-    if (assignedSellerInfo == null) {
-      return "No Seller found"
-    }
-    else {
-
-      let curSellerDet = await this.sellerRepository.findOne(assignedSellerInfo.sellerId);
-      //console.log("Current USER DETAILS================",curUserDet)
-      if (curSellerDet.status == 'approved') {
-
-        return curSellerDet;
-      }
-      else {
-        return "Your account status is " + curSellerDet.status
-      }
-      //const { password,username,DOB,, ...result } = reslut;
-      // console.log("useruseruseruser", curUserDet);
-
-    }
-
+    var assignedSellerInfo = await this.sellerRepository.findOne(user.sl);
+    // console.log("CURRENT SELLER======================",assignedSellerInfo)
+    return assignedSellerInfo
   }
-
-
-
-
-
 }

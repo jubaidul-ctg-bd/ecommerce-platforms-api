@@ -50,6 +50,9 @@ export class Product {
     banner: string;
 
     @Column()
+    categoryTitle: string;
+
+    @Column()
     createdAt: string;
 
     @Column()

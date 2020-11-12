@@ -17,9 +17,9 @@ export class MediaService {
     async mediaSeller( user: any) {
         console.log("payload==========", user);
         var assignedSellerInfo = await this.sellerRepository.findOne(user.sl);
-        console.log("assignedSellerInfo.shopName", assignedSellerInfo.shopName);
+        console.log("assignedSellerInfo.shopName", assignedSellerInfo.folderName);
         
-        return assignedSellerInfo.shopName;
+        return assignedSellerInfo.folderName;
     }
     
 }
