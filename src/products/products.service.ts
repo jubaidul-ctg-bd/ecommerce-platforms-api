@@ -5,6 +5,7 @@ import { Category } from 'src/category/categorySchema/category.entity';
 import { Repository } from 'typeorm';
 import { Product } from './productSchema/products.entity';
 import {ObjectId,ObjectID as ObjID} from 'mongodb'
+import { ProductDto } from './productSchema/product.dto';
 @Injectable()
 export class ProductsService {
 
@@ -36,7 +37,7 @@ export class ProductsService {
         await this.productRepository.delete(id);
       }
 
-      async create(data: any, decoded: any):Promise<any> {
+      async create(data: ProductDto, decoded: any):Promise<any> {
 
         console.log(data.categories)
         if (data.categories){
@@ -48,7 +49,6 @@ export class ProductsService {
         else{
           data.categoryId = null
         }
-
         data.sellerId =  decoded.sl
         data.createdAt = new Date()
         data.createdBy = data.mail
@@ -96,28 +96,11 @@ export class ProductsService {
         for (let key in data) {
             if (data.hasOwnProperty(key) && key!="status") {
                 data[key].status = data["status"];
-                data[key].UpdateBy = data.mail
-                data[key].UpdatedAt = new Date()
-                // let sellerId = new sellers();
-                // sellerId._id =data[key]._id;
-                // sellerId._id = data[key]._id 
+                data[key].updatedAt = new Date()
+                data[key].updateBy = data.mail
                 let _id  = data[key]._id;
-                // tmp = new ObjID(tmp)
-                console.log("_id",_id);
                 delete data[key]._id;
-                // let x = await this.sellerinfoRepository.update({_id}, data[key]); 
-                let x = await this.productRepository.findOne(_id); 
-                console.log("products===============",x)
-                //delete x.shopName;
-                //delete x.title;
-                //delete x.createdAt;
-                delete x.status;
-                //delete x.cellNo;
-                //delete x.mail;
-                console.log("x======",x);
-
-                let xup = await this.productRepository.update(x,data[key]); 
-                console.log("Vlaue=================",xup)
+                let xup = await this.productRepository.update(_id, data[key]); 
             }
           }
           return data;

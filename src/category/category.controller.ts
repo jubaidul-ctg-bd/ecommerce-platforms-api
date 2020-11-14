@@ -1,12 +1,15 @@
-import { Body, Controller, Get, Param, Post, UsePipes, ValidationPipe,Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UsePipes,Request, UseGuards } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { Category } from './categorySchema/category.entity';
-import { categoryInterface } from './categorySchema/category.interface';
+import { categoryinterface } from './categorySchema/category.interface';
 import { ObjectID } from 'typeorm'
 import { Seller } from 'src/sellers/sellerSchema/seller.entity';
 import { categoryvalidator } from './categorySchema/validator.category';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtAuthGuard } from 'src/users/auth/jwt-auth.guard';
+import { categoryDto } from './categorySchema/category.dto';
+import {  } from './common/validation.pipe';
+import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
 @Controller('category')
 export class CategoryController {
     constructor(private readonly categoryService: CategoryService) {}
@@ -15,25 +18,25 @@ export class CategoryController {
     //find all the roots 
     @UseGuards(JwtAuthGuard)
     @Get('all')
-    find(): Promise<categoryInterface> {
+    find(): Promise<categoryinterface> {
         return this.categoryService.findAll();
     }
 
     //find entire category tree
     @UseGuards(JwtAuthGuard)
     @Get('allChild')
-    getallChild(): Promise<categoryInterface> {
+    getallChild(): Promise<categoryinterface> {
         return this.categoryService.getallChild();
     }
 
 
 
     //find the subdomain category
-    @UseGuards(JwtAuthGuard)
-    @Get('specific')
-    createCategory(@Param() params,@Body() user: Category) {
-        return this.categoryService.createCategory(params.id,user);
-    }
+    // @UseGuards(JwtAuthGuard)
+    // @Get('specific')
+    // createCategory(@Param() params,@Body() user: Category) {
+    //     return this.categoryService.createCategory(params.id,user);
+    // }
 
     
     @UseGuards(JwtAuthGuard)
@@ -44,37 +47,29 @@ export class CategoryController {
 
 
 
-    
-    // @Post('create')
-    // @UsePipes(new ValidationPipe())
-    // create(@Body() user: Category ):Promise<Category> {
-    //     console.log("category created")
-    //     console.log("category created=========",user)
-
-    //     return this.categoryService.create(user);
-    // }
-
-
-
-
     @UseGuards(JwtAuthGuard)
-    @Get('root')
-    findbyroot(): Promise<Category> {
-        return this.categoryService.findbyroot();
-    }
-
-
-    @UseGuards(JwtAuthGuard)
-    @UsePipes(new ValidationPipe())
+    @UsePipes(
+        new ValidationPipe({
+            whitelist: true
+        }),
+      )
     @Post('createCategory')
-    createcategory(@Body() user: categoryInterface):Promise<categoryInterface> {
+    async createcategory(@Request() req,@Body() user: Category) {
         console.log("clalled mysql post")
-        return this.categoryService.createcategory(user);
+        let newCategory : any = {}
+        try{
+            newCategory = this.categoryService.createcategory(user,req.user.mail);
+        }catch(err){
+            //console.log("ERROR================",err)
+            return err;
+        }
+        return await newCategory
+        //return this.categoryService.createcategory(user,req.user.mail);
     }
 
     @UseGuards(JwtAuthGuard)
     @Get('showParentCategory')
-    showSubCategory(): Promise<categoryInterface> {
+    showSubCategory(): Promise<categoryinterface> {
         return this.categoryService.showSubCategory();
     }
     

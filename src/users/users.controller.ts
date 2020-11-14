@@ -11,8 +11,6 @@ export class UsersController {
 
     constructor(private readonly userInfoService: UsersService,private authService: AuthService) {}
 
-
-    
     @UsePipes(new ValidationPipe())
     @Post('registration')
     async createfirst(@Body() user: User) {
@@ -27,11 +25,6 @@ export class UsersController {
         return await newUser
     }
     
-
-
-
-
-
     @UseGuards(LocalAuthGuard)
     @Post('login')
     async login(@Request() req) {
@@ -43,14 +36,10 @@ export class UsersController {
     }
 
 
-
-
-
-
-
     @UseGuards(JwtAuthGuard)
     @Post('delete')
     delete(@Body() body) {
+        console.log("DELETE CALLED")
         return this.userInfoService.delete(body.id);
     }
 
@@ -60,6 +49,26 @@ export class UsersController {
     @Get('currentuser')
     authDecode(@Request() req){ 
     return this.userInfoService.authDecode(req.user);
-    
     }
+
+
+    @UseGuards(JwtAuthGuard)
+    @Get('all')
+    find(): Promise<User> {
+        return this.userInfoService.findAll();
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Post('update')
+    update(@Body() params) {
+        return this.userInfoService.update(params);
+    }
+
+
+    @UseGuards(JwtAuthGuard)
+    @Post('updateList')
+    updateList(@Body() params) {
+        return this.userInfoService.updateList(params);
+    }
+
 }

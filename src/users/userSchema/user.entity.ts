@@ -12,6 +12,11 @@ export class User {
     _id: ObjectID;
 
 
+  
+
+  @Column()
+  name: string;
+  
   @Column()
   username: string;
 
@@ -33,11 +38,11 @@ export class User {
   @IsNotEmpty()
   mail: string;
 
-  @IsNotEmpty()
+  
   @Column()
   address: string;
 
-  @IsNotEmpty()
+  
   @Column()
   DOB: string;
 
@@ -48,24 +53,24 @@ export class User {
   nationality: string;
 
   
-  @Column({default:"user"})
+  @Column()
   role: string;
 
   @Column()
   status: string;
 
+  @Column()
+  createdAt: Date;
 
   @Column()
-  CreatedBy: string;
+  createdBy: string;
 
   @Column()
-  CreatedAt: string;
+  updatedAt: Date;
 
   @Column()
-  UpdatedBy: string;
+  updatedBy: string;
 
-  @Column()
-  UpdatedAt: string;
 
 
   // @OneToMany(() => sellerUser, sellerUser => sellerUser._id)

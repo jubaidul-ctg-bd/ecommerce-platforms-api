@@ -42,17 +42,14 @@ export class MediaController {
     @UseGuards(JwtAuthGuard)
     @Get('media')
     async findall(@Request() req, @Res() res) {
-        let dPath = ''
-        if(req.user.sl) {
-            dPath = req.user.sl
-        }
-        else {
+        let dPath = req.user.sl
+        if(!req.user.sl) {
             dPath = "categoryImage"
         }
         var directoryPath = join(process.cwd(), '/upload/'+dPath);
         try {
                 
-            const path=baseUrl+'/media/image/'+req.user.sl+'/';
+            const path=baseUrl+'/media/image/'+dPath+'/';
             readdir(directoryPath, function (err, files) {
                 //handling error
                 if (err) {
@@ -97,14 +94,8 @@ export class MediaController {
    
     @UseGuards(JwtAuthGuard)
     @Post('deleteImage')
-    async deleteImage(@Request() res,@Body() body) {
-        const shopName = await this.mediaService.mediaSeller(res.user);
-        if(shopName) {
-            var directoryPath = join(process.cwd(), '/upload/'+shopName);
-        } else {
-            var directoryPath = join(process.cwd(), '/upload/categoryImages');
-        }
-        //console.log(body);
+    async deleteImage(@Request() req,@Body() body) {
+        const directoryPath = join(process.cwd(), '/upload/');
         return unlinkSync(directoryPath+'/'+body.name)
     }
 
@@ -122,9 +113,12 @@ export class MediaController {
     {
         storage: diskStorage({
         destination: (req, file, callback) => {
-            console.log("IMG UPDATE===========================",req.user['sl']);
+            // console.log("IMG UPDATE===========================",req.user['sl']);
             // const shopName = await this.mediaService.mediaSeller(req.user);
             let slId = req.user['sl']
+            if(!req.user['sl']) {
+                slId = "categoryImage"
+            }
             // let dest = req.query.dest;
             let tmp = `upload/${slId}`
             try {

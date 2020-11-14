@@ -16,17 +16,18 @@ export class Product {
     @Column()
     category: string;
     
-
+    @Column()
+    categories: [];
     
     //@IsNotEmpty()
-    @ObjectIdColumn()
-    sellerId: ObjectID;
+    @ObjectIdColumn({ name: 'sellerId' })
+    sellerId: string;
 
     // @ObjectIdColumn()
     // categories_id: ObjectID;
 
-    @ObjectIdColumn()
-    categoryId: ObjectID;
+    @ObjectIdColumn({ name: 'categoryId' })
+    categoryId: string;
 
     @IsNotEmpty()
     @Column()
@@ -53,16 +54,20 @@ export class Product {
     categoryTitle: string;
 
     @Column()
-    createdAt: string;
+    createdAt: Date;
 
     @Column()
     createdBy: string;
 
     @Column()
-    updatedAt: string;
+    updatedAt: Date;
 
     @Column()
     updatedBy: string;
+
+    @Column()
+    mail: string;
+
 
     
     // @OneToMany(type=>Category, category=>category.products)

@@ -29,16 +29,16 @@ export class Seller  {
   folderName: string;
 
   @Column()
-  CreatedBy: string;
+  createdAt: Date;
 
   @Column()
-  CreatedAt: string;
+  createdBy: string;
 
   @Column()
-  UpdatedBy: string;
+  updatedAt: Date;
 
   @Column()
-  UpdatedAt: string;
+  updatedBy: string;
 
   @Column()
   status: string;

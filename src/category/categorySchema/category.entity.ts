@@ -1,5 +1,5 @@
 
-import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn, ObjectIdColumn, ObjectID, ManyToOne, OneToMany, Tree, JoinTable, JoinColumn, TreeChildren, TreeParent, IsNull, BaseEntity, ManyToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn, ObjectIdColumn, ObjectID, ManyToOne, OneToMany, Tree, JoinTable, JoinColumn, TreeChildren, TreeParent, IsNull, BaseEntity, ManyToMany, Unique } from 'typeorm';
 
 import {validate, validateOrReject, Contains, IsInt, Length, IsEmail, IsFQDN, IsDate, Min, Max, IsNotEmpty, IsDefined, isInt, min} from "class-validator";
 import { Product } from 'src/products/productSchema/products.entity';
@@ -8,36 +8,30 @@ import { Product } from 'src/products/productSchema/products.entity';
 
 
 @Entity()
+@Unique("UQ_Category",["title"])
 export class Category {
     // @PrimaryGeneratedColumn()
     // id: number
-    
-
-    
 
     @ObjectIdColumn()
     _id: ObjectID;
 
-
+    @Column({name: "title"})
     @IsNotEmpty()
-    @Column()
     title : string;
+
     @IsNotEmpty()
     @Column()
     slug: string;
 
-    
-    // @Column()
-    // id: string;
     @IsNotEmpty()
     @Column()
     order: string;
+
     @IsNotEmpty()
     @Column()
     status: string;
 
-    
-    
     @Column()
     banner: string;
 
@@ -48,35 +42,40 @@ export class Category {
     image: string;
 
     @Column()
-    createdAt: string;
+    createdAt: Date;
 
     @Column()
     createdBy: string;
 
     @Column()
-    updatedAt: string;
+    updatedAt: Date;
 
     @Column()
     updatedBy: string;
 
-    @ObjectIdColumn()
-    parentId: ObjectID;
+    @ObjectIdColumn({ name: 'parentId' })
+    parentId: string;
+
+    @Column()
+    Category: string;
+
+    @Column()
+    parentCategoryTitle: string;
+
+    @Column()
+    description: string;
 
     @Column()
     children: Category[];
 
+    @Column()
+    parentCategories: [];
 
     @ManyToOne(type => Category, category => category.childCategories)
     parentCategory: Category;
 
     @OneToMany(type => Category, category => category.parentCategory)
     childCategories: Category[];
-    
-    @Column()
-    Category: string;
-
-
-
 
     // @ManyToOne(type=>Product, products=>products.categories)
     // products:Product[];

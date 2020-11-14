@@ -4,28 +4,21 @@ import { ProductsService } from './products.service';
 import { compareSync } from 'bcrypt';
 import jwt_decode from 'jwt-decode';
 import { JwtAuthGuard } from 'src/users/auth/jwt-auth.guard';
+import { ProductDto } from './productSchema/product.dto';
 @Controller('product')
 export class ProductsController {
 
     constructor(private readonly productService: ProductsService) {}
 
-
     @UseGuards(JwtAuthGuard)
     @Get('all')
     find(@Request() req): Promise<any> {
-       // console.log("REQUEST CALLED=================",req);
-        
-       // console.log(req.headers);
         return this.productService.findAll();
     }
-
 
     @UseGuards(JwtAuthGuard)
     @Get('productForCurrentSeller')
     findCurrentSeller(@Request() req): Promise<any> {
-        // const header = req.headers.authorization
-        // const decoded = jwt_decode(header);
-        // console.log("PRODUCT CREATE==============",decoded)
         return this.productService.findCurrentSeller(req.user);
     }
 
@@ -37,20 +30,18 @@ export class ProductsController {
     }
 
 
-
-    
     @UseGuards(JwtAuthGuard)
-    @UsePipes(new ValidationPipe())
+    @UsePipes(
+        new ValidationPipe({
+            whitelist: true
+        }),
+      )
     @Post('create')
-    create(@Request() req, @Body() user: Product):Promise<any> {
-        console.log("product create called")
-        // const header = req.headers.authorization
-        // const decoded = jwt_decode(header);
+    create(@Request() req, @Body() user: Product) {
         return this.productService.create(user,req.user);
     }
 
 
-    
     @UseGuards(JwtAuthGuard)
     @Post('delete')
     delete(@Body() body) {
@@ -59,19 +50,10 @@ export class ProductsController {
     }
 
 
-    
     @UseGuards(JwtAuthGuard)
     @Post('update')
     update(@Body() params) {
-        console.log("PRODUCT UPDATE CALLED===============",params)
-        // console.log("asasdasdasdasd",params[0])
-        // console.log(x.length)
         return this.productService.update(params);
     }
-
-
-
-
-
 
 }

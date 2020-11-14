@@ -26,14 +26,12 @@ export class SellersService {
 
   async personDetails(_id: string) {
     return await this.sellerRepository.findOne(_id)
-    //return this.sellerinfoRepository.update({_id}, data);
   }
 
 
   async permission(_id: ObjectID, data: Seller) {
     await this.sellerRepository.update({ _id }, data);
     return await this.sellerRepository.findOne(_id)
-    //return this.sellerinfoRepository.update({_id}, data);
   }
 
 
@@ -48,11 +46,7 @@ export class SellersService {
   async create(data: SellerInfoInter): Promise<any> {
     let userData: any = ""
     let sellerData: any = ""
-
-    //data.category.push(datavalue)
     try {
-
-      //creating new user
       const newUser  = new User()
       newUser.username = data.username
       newUser.password = data.password
@@ -60,15 +54,15 @@ export class SellersService {
       newUser.cellNo = data.cellNo
       newUser.role = "seller-admin"
       newUser.status = "pending"
-      newUser.CreatedAt = String(new Date())
-      newUser.UpdatedAt = data.mail
+      newUser.createdAt = new Date()
+      newUser.createdBy = data.mail
       userData = await this.userRepository.save(newUser);
 
       //creating new seller
       const newSeller = new Seller()
       newSeller.shopName = data.shopName
-      newSeller.CreatedAt = String(new Date())
-      newSeller.CreatedBy = data.mail
+      newSeller.createdAt = new Date()
+      newSeller.createdBy = data.mail
       newSeller.status = "pending"
       newSeller.mail = data.mail
       newSeller.cellNo = data.cellNo
@@ -96,50 +90,24 @@ export class SellersService {
 
   }
 
-
-  //update
   async update(data: any) {
-
     console.log("status", data["status"]);
-
-
     for (let key in data) {
       if (data.hasOwnProperty(key) && key != "status") {
         data[key].status = data["status"];
         data[key].updatedAt = new Date()
-        data[key].updatedBy = data.mail
-        //data[key].updatedAt= new Date()
-
-
-        // let sellerId = new sellers();
-        // sellerId._id =data[key]._id;
-        // sellerId._id = data[key]._id 
-        let _id = data[key]._id;
-        // tmp = new ObjID(tmp)
-        console.log("_id", _id);
+        data[key].updateBy = data.mail
+        let _id  = data[key]._id;
         delete data[key]._id;
-        // let x = await this.sellerinfoRepository.update({_id}, data[key]); 
-        let x = await this.sellerRepository.findOne(_id);
-        //delete x.shopName;
-        //delete x.role;
-        delete x.status;
-        //delete x.cellNo;
-        //delete x.mail;
-
-        let xup = await this.sellerRepository.update(x, data[key]);
+        let xup = await this.sellerRepository.update(_id, data[key]); 
       }
     }
     return data;
-    // console.log("ID====================",_id);
-    // await this.sellerinfoRepository.update({_id}, data); 
-    // return await this.sellerinfoRepository.findOne(_id)
-    //return this.sellerinfoRepository.update({_id}, data);
   }
 
 
   async sellerDetail(user: any) {
     var assignedSellerInfo = await this.sellerRepository.findOne(user.sl);
-    // console.log("CURRENT SELLER======================",assignedSellerInfo)
     return assignedSellerInfo
   }
 }

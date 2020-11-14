@@ -10,7 +10,7 @@ export class SellerUser{
     @Column()
     userId: string;
 
-    @Column()
+    @ObjectIdColumn({name: "sellerId"})
     sellerId: string;
     
     @Column()

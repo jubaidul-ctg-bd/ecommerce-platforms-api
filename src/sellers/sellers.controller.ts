@@ -21,7 +21,6 @@ export class SellersController {
     @UsePipes(new ValidationPipe())
     @Post('registration')
     async createfirst(@Body() user: SellerInfoInter): Promise<Seller> {
-       // console.log("SERLLER RGISTAION==========",user)
         let newUser : any = {}
         try{
               newUser = await this.sellerInfoService.create(user);;
@@ -70,25 +69,17 @@ export class SellersController {
     @UseGuards(JwtAuthGuard)
     @Post('update')
     update(@Body() params) {
-        
-        // console.log("asasdasdasdasd",params[0])
-        // console.log(x.length)
         return this.sellerInfoService.update(params);
     }
 
     @UseGuards(JwtAuthGuard)
     @Get('currentSeller')
     sellerDetail(@Request() req) {
-        //console.log("CURRENT SELLER======================",req)
         return this.sellerInfoService.sellerDetail(req.user);
-       // return req.user;
     }
-
-
-
+    
 //     @Get('logout')
 //     logout(@Request() req, @Res() res: Response): void {
 //     req.logout();
 //   }
-
 }
