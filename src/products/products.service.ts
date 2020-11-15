@@ -15,7 +15,6 @@ export class ProductsService {
 
     
     async findAll(): Promise<Product[]> {
-
         let allProducts = await this.productRepository.find();
         return allProducts; 
       }
@@ -34,6 +33,7 @@ export class ProductsService {
       }
 
       async delete(id: string) {
+        console.log("ID==================",id)
         await this.productRepository.delete(id);
       }
 
@@ -51,7 +51,7 @@ export class ProductsService {
         }
         data.sellerId =  decoded.sl
         data.createdAt = new Date()
-        data.createdBy = data.mail
+        data.createdBy = decoded.mail
         return await this.productRepository.save(data)
 
         

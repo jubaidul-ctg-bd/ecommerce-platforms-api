@@ -27,13 +27,10 @@ export class UsersService {
                 data[key].updatedAt= new Date()
                 data[key].updatedBy = data.mail
                 let _id  = data[key]._id;
-                console.log("_id",_id);
                 delete data[key]._id;
                 let x = await this.userRepository.findOne(_id); 
                 delete x.status;
-                console.log("x======",x);
                 let xup = await this.userRepository.update(x,data[key]); 
-                console.log("Vlaue=================",xup)
             }
           }
           return data;

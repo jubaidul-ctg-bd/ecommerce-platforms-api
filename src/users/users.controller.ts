@@ -71,4 +71,10 @@ export class UsersController {
         return this.userInfoService.updateList(params);
     }
 
+    // @Get('/logout')
+    // logout(@Request() req): void {
+    //   console.log()
+    //   req.logout();
+    // }
+
 }

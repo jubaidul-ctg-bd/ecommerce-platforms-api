@@ -1,4 +1,4 @@
-import { ObjectID } from "typeorm";
+import { BaseEntity, ObjectID } from "typeorm";
 import { Category } from "./category.entity";
 
 export class categoryDto {

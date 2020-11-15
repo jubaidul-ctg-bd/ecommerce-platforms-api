@@ -10,6 +10,7 @@ import { JwtAuthGuard } from 'src/users/auth/jwt-auth.guard';
 import { categoryDto } from './categorySchema/category.dto';
 import {  } from './common/validation.pipe';
 import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
+import { categoryWiseAttr } from './categorySchema/categoryWiseAttr.entity';
 @Controller('category')
 export class CategoryController {
     constructor(private readonly categoryService: CategoryService) {}
@@ -55,13 +56,13 @@ export class CategoryController {
       )
     @Post('createCategory')
     async createcategory(@Request() req,@Body() user: Category) {
-        console.log("clalled mysql post")
+        console.log("category created===============",user)
         let newCategory : any = {}
         try{
             newCategory = this.categoryService.createcategory(user,req.user.mail);
         }catch(err){
             //console.log("ERROR================",err)
-            return err;
+            return err; 
         }
         return await newCategory
         //return this.categoryService.createcategory(user,req.user.mail);
@@ -83,11 +84,37 @@ export class CategoryController {
     @UseGuards(JwtAuthGuard)
     @Post('update')
     update(@Body() params) {
-        console.log("Seller CAlled===============",params)
+        console.log("Updated CAlled===============",params)
         // console.log("asasdasdasdasd",params[0])
         // console.log(x.length)
         return this.categoryService.update(params);
     }
+
+
+    @UseGuards(JwtAuthGuard)
+    @Post('updateList')
+    updateList(@Body() params) {
+        console.log("Seller CAlled===============",params)
+        // console.log("asasdasdasdasd",params[0])
+        // console.log(x.length)
+        return this.categoryService.updateList(params);
+    }
+
+
+    @Post('attributeCreate')
+    async attributeCreate(@Request() req,@Body() user: categoryWiseAttr) {
+        console.log("category created===============",user)
+        let newCategory : any = {}
+        try{
+            newCategory = this.categoryService.attributeCreate(user);
+        }catch(err){
+            //console.log("ERROR================",err)
+            return err; 
+        }
+        return await newCategory
+        //return this.categoryService.createcategory(user,req.user.mail);
+    }
+
 
 
 }

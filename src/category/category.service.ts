@@ -10,9 +10,12 @@ import { userInfo } from 'os';
 import { LOADIPHLPAPI } from 'dns';
 
 import {ObjectId,ObjectID as ObjID} from 'mongodb'
-import { async } from 'rxjs';
+import { async, empty } from 'rxjs';
 import { User } from 'src/users/userSchema/user.entity';
 import { categoryDto } from './categorySchema/category.dto';
+import { ProductDto } from 'src/products/productSchema/product.dto';
+import { isEmpty } from 'class-validator';
+import { categoryAttrDto } from './categorySchema/categoryAttr.dto';
 
 @Injectable()
 export class CategoryService {
@@ -57,9 +60,10 @@ export class CategoryService {
       async getallChild(): Promise<any> {
         console.log("ALL CHILD CALLED")
         console.log("find all");
-        let parent=await this.categoryRepository.find({
+        let parent = await this.categoryRepository.find({
           where:{parentId:null},
         })
+       
         //console.log("PARENT============",parent)
         for(let i=0; i<parent.length; i++)
         {
@@ -67,9 +71,8 @@ export class CategoryService {
           let child=await this.categoryRepository.find({
             where:{parentId:String(parent[i]._id)},
           })    
-
-          parent[i].children=child;
-          
+          //if child exist creating a new array for child
+          if(Object.keys(child).length) parent[i].children=child;
           if(child!=null)
           {
              for(let j=0; j<child.length; j++)
@@ -77,8 +80,7 @@ export class CategoryService {
               let subchild=await this.categoryRepository.find({
                 where:{parentId:String(child[j]._id)},
               })
-              child[j].children=subchild;
-
+              if(Object.keys(subchild).length) child[j].children=subchild;
               if(subchild!=null)
               {
                  for(let k=0; k<subchild.length; k++)
@@ -86,16 +88,12 @@ export class CategoryService {
                   let subsubchild = await this.categoryRepository.find({
                     where:{parentId:String(subchild[k]._id)},
                   })
-                  subchild[k].children=subsubchild;
+                  if(Object.keys(subsubchild).length) subchild[k].children=subsubchild;
                  }
               }
              }
           }
-
-          // subtree.concat(child)
-          // console.log(child)
-          // //console.log("FIRST VALUE============", data[i].parentId);
-          // //for(let j=0; j)
+         
         }
 
 
@@ -172,7 +170,6 @@ export class CategoryService {
           console.log("ADDED CATEGORY DATA=================",data)
           console.log("parent Category =================",data.parentCategories)
           if (data.parentCategories){
-
             data.parentId  =  (data.parentCategories[data.parentCategories.length-1])
             let catId = await this.categoryRepository.findOne(data.parentId)
             data.parentCategoryTitle =  catId.title
@@ -186,18 +183,14 @@ export class CategoryService {
         }catch(err) {
           return err.writeErrors[0].errmsg        
         }
-        return await createdCategory
+        return  createdCategory
       }
 
       
       async showSubCategory(): Promise<any> {
-        //console.log("creating categories ");
         let parent=await this.categoryRepository.find({
           where:{parentId:null},
         })
-        //console.log("PARENT============",parent)
-
-
         for(let i=0; i<parent.length; i++)
         {
           parent[i].parentId = null;
@@ -221,7 +214,7 @@ export class CategoryService {
       }
 
       //update
-      async update(data: any) {
+      async updateList(data: any) {
         console.log("status", data["status"]);
         for (let key in data) {
             if (data.hasOwnProperty(key) && key!="status") {
@@ -258,6 +251,29 @@ export class CategoryService {
         // await this.sellerinfoRepository.update({_id}, data); 
         // return await this.sellerinfoRepository.findOne(_id)
         //return this.sellerinfoRepository.update({_id}, data);
+      }
+
+      async update(data: Category) {
+        let categoryID = data._id
+        if (data.parentCategories){
+          data.parentId  =  (data.parentCategories[data.parentCategories.length-1])
+          let categoryTitle = (await this.categoryRepository.findOne(data.parentId)).title
+          data.parentCategoryTitle =  categoryTitle
+        }
+        else{
+          data.parentCategories = null 
+          data.parentCategoryTitle = null
+          data.parentId = null
+        }
+        delete data._id 
+        let UpdatedData = await this.categoryRepository.update(categoryID,data); 
+        return UpdatedData;
+      }
+
+
+
+      async attributeCreate(data: categoryAttrDto ) {
+        return ;
       }
 
 }

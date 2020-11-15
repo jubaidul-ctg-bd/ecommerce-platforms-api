@@ -90,7 +90,7 @@ export class AuthService {
         // if found then find the seller is active or not, if not then send a message, the seller is not activated yet, please contact with system admin
     }
     else if(useragent && useragent=='user') {} 
-    else if(useragent && useragent=='admin') {}
+    else if(useragent && useragent=='admin') {} 
     return {
       status: "ok",
       role: user.role,

@@ -46,7 +46,7 @@ export class ProductsController {
     @Post('delete')
     delete(@Body() body) {
         console.log(body)
-        return this.productService.delete(body.id);
+        return this.productService.delete(body);
     }
 
 
