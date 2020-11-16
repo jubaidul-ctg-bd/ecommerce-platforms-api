@@ -4,7 +4,7 @@ import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn, ObjectIdColumn, 
 
 export class categoryAttrDto {
     _id: ObjectID;
-    productCategoryId: string;
+    categoryId: string;
     attrTitle: string;
     attrType: string;
     attrOption: [];
@@ -12,4 +12,7 @@ export class categoryAttrDto {
     createdBy: string;
     updatedAt: Date;
     updatedBy: string;
+    Category:string;
+    categoriesId:[];
+    
 }

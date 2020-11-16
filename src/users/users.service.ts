@@ -30,7 +30,7 @@ export class UsersService {
                 delete data[key]._id;
                 let x = await this.userRepository.findOne(_id); 
                 delete x.status;
-                let xup = await this.userRepository.update(x,data[key]); 
+                await this.userRepository.update(x,data[key]); 
             }
           }
           return data;
@@ -50,7 +50,7 @@ export class UsersService {
 
    
     async findUser(username: string): Promise<User> {
-        const userRepository = getMongoRepository(User,'ebhubon')
+        const userRepaository = getMongoRepository(User,'ebhubon')
         const name = await this.userRepository.findOne({
             where: {
                 $or: [

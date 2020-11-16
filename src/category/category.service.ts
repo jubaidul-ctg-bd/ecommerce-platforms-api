@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Category } from './categorySchema/category.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository,TreeRepository,getRepository, getMongoRepository ,ObjectID, createConnection, getConnectionManager} from 'typeorm';
@@ -16,11 +16,13 @@ import { categoryDto } from './categorySchema/category.dto';
 import { ProductDto } from 'src/products/productSchema/product.dto';
 import { isEmpty } from 'class-validator';
 import { categoryAttrDto } from './categorySchema/categoryAttr.dto';
+import { CategoryAttribute } from './categorySchema/categoryWiseAttr.entity';
 
 @Injectable()
 export class CategoryService {
     constructor( 
     @InjectRepository(Category,'ebhubon') private readonly categoryRepository: Repository<Category>,
+    @InjectRepository(CategoryAttribute,'ebhubon') private readonly categoryAttributeRepository: Repository<CategoryAttribute>
     ) {}
 
       async delete(id: string) {
@@ -197,7 +199,7 @@ export class CategoryService {
           let child=await this.categoryRepository.find({
             where:{parentId:String(parent[i]._id)},
           })    
-          parent[i].children=child;
+          if(Object.keys(child).length) parent[i].children=child;
           if(child!=null)
           {
              for(let j=0; j<child.length; j++)
@@ -205,7 +207,7 @@ export class CategoryService {
               let subchild=await this.categoryRepository.find({
                 where:{parentId:String(child[j]._id)},
               })
-              child[j].children=subchild;
+              if(Object.keys(subchild).length) child[j].children=subchild;
              }
           }
         }
@@ -272,8 +274,61 @@ export class CategoryService {
 
 
 
+      // async attributeCreate(data: categoryAttrDto ) {
+      //   const asd = getMongoRepository(CategoryWiseAttr,'ebhubon')
+
+      //   const photo1 = new CategoryWiseAttr();
+      //   photo1.attrTitle = "Brand";
+      //   await this.catAttributeRepository.save(photo1);
+
+      //   const user = new Category();
+      //   user.title = "John";
+      //   user.slug = "asdf"
+      //   user.categoryWiseAttrs = [photo1];
+        
+      //   return await this.categoryRepository.save(user);
+      // }
+
+
       async attributeCreate(data: categoryAttrDto ) {
-        return ;
+        if (!data.categoryId){
+            data.categoryId = data.categoriesId[data.categoriesId.length-1]
+            delete data.categoriesId
+        }
+        return await this.categoryAttributeRepository.save(data);
       }
+
+      async attributeGet(): Promise<any> {
+        let data =await this.categoryAttributeRepository.find()
+        return data;
+      }
+
+      async attributeUpdate(data: any) {
+        let userId = data._id
+        delete data._id 
+        let UpdatedData = await this.categoryAttributeRepository.update(userId,data); 
+        return UpdatedData;
+      }
+
+      async attributeDelete(id: string) {
+        const data = await this.categoryAttributeRepository.delete(id);
+        if (!data)
+        {
+          throw new HttpException('Not found',HttpStatus.NOT_FOUND)
+        }
+        return data
+      }
+
+      async findspecific(catId: string) {
+        const data = await this.categoryAttributeRepository.find({categoryId:catId});
+        if (!data)
+        {
+
+            throw new HttpException('Not found',HttpStatus.NOT_FOUND)
+        }
+        return data
+      }
+
+
 
 }

@@ -10,7 +10,7 @@ export class ProductsController {
 
     constructor(private readonly productService: ProductsService) {}
 
-    @UseGuards(JwtAuthGuard)
+    
     @Get('all')
     find(@Request() req): Promise<any> {
         return this.productService.findAll();
@@ -23,11 +23,19 @@ export class ProductsController {
     }
 
     
-    @UseGuards(JwtAuthGuard)
+    //find a specific products
     @Get('specific/:id')
-    findspecific(@Param() params): Promise<Product> {
-        return this.productService.findbyid(params.id);
+    findspecific(@Param('id') id): Promise<Product> {
+        console.log(id)
+        return this.productService.findspecific(id);
     }
+
+    //find all similar products
+    // @Get('specific/:id')
+    // findspecific(@Param() params): Promise<Product> {
+    //     console.log(params.id)
+    //     return this.productService.findspecific(params.id);
+    // }
 
 
     @UseGuards(JwtAuthGuard)

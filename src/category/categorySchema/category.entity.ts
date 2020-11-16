@@ -3,6 +3,7 @@ import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn, ObjectIdColumn, 
 
 import {validate, validateOrReject, Contains, IsInt, Length, IsEmail, IsFQDN, IsDate, Min, Max, IsNotEmpty, IsDefined, isInt, min, Allow} from "class-validator";
 import { Product } from 'src/products/productSchema/products.entity';
+import { CategoryAttribute } from './categoryWiseAttr.entity';
 
  
 
@@ -98,5 +99,9 @@ export class Category {
 
     // @ManyToOne(type=>Product, products=>products.categories)
     // products:Product[];
+
+    // @OneToMany(type => CategoryAttribute, categoryWiseAttr => categoryWiseAttr.categorys)
+    // categoryWiseAttrs: CategoryAttribute[];
+    
     
 }

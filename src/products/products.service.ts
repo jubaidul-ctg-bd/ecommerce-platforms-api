@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { config } from 'process';
 import { Category } from 'src/category/categorySchema/category.entity';
@@ -28,8 +28,13 @@ export class ProductsService {
         return allProducts; 
       }
 
-      findbyid(username: string): Promise<Product> {
-        return this.productRepository.findOne(username);
+      async findspecific(username: string): Promise<Product> {
+        const data = await this.productRepository.findOne({title:username});
+        if (!data)
+        {
+            throw new HttpException('Not found',HttpStatus.NOT_FOUND)
+        }
+        return data
       }
 
       async delete(id: string) {

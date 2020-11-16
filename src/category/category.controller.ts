@@ -10,21 +10,21 @@ import { JwtAuthGuard } from 'src/users/auth/jwt-auth.guard';
 import { categoryDto } from './categorySchema/category.dto';
 import {  } from './common/validation.pipe';
 import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
-import { categoryWiseAttr } from './categorySchema/categoryWiseAttr.entity';
+import { CategoryAttribute } from './categorySchema/categoryWiseAttr.entity';
 @Controller('category')
 export class CategoryController {
     constructor(private readonly categoryService: CategoryService) {}
 
 
     //find all the roots 
-    @UseGuards(JwtAuthGuard)
+   
     @Get('all')
     find(): Promise<categoryinterface> {
         return this.categoryService.findAll();
     }
 
     //find entire category tree
-    @UseGuards(JwtAuthGuard)
+    
     @Get('allChild')
     getallChild(): Promise<categoryinterface> {
         return this.categoryService.getallChild();
@@ -68,7 +68,7 @@ export class CategoryController {
         //return this.categoryService.createcategory(user,req.user.mail);
     }
 
-    @UseGuards(JwtAuthGuard)
+    
     @Get('showParentCategory')
     showSubCategory(): Promise<categoryinterface> {
         return this.categoryService.showSubCategory();
@@ -102,7 +102,7 @@ export class CategoryController {
 
 
     @Post('attributeCreate')
-    async attributeCreate(@Request() req,@Body() user: categoryWiseAttr) {
+    async attributeCreate(@Request() req,@Body() user: CategoryAttribute) {
         console.log("category created===============",user)
         let newCategory : any = {}
         try{
@@ -116,5 +116,26 @@ export class CategoryController {
     }
 
 
+    @Post('deleteAttribute/:id')
+    attributeDelete(@Body() body) {
+        console.log("DELETE CALLED",body)
+        return this.categoryService.attributeDelete(body);
+    }
+    
+    @Post('attribute/update')
+    attributeUpdate(@Body() params) {
+        return this.categoryService.attributeUpdate(params);
+    }
+
+    @Get('attribute/all')
+    attributeGet(): Promise<CategoryAttribute> {
+        return this.categoryService.attributeGet();
+    }
+
+    @Get('attributeList/:id')
+    findspecific(@Param('id') id) {
+        console.log("AttributeList called ",id)
+        return this.categoryService.findspecific(id);
+    }
 
 }

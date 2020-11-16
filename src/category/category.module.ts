@@ -8,9 +8,10 @@ import { productCreateMiddleware } from 'src/products/middleware/productCreate.m
 import { productUpdateMiddleware } from 'src/products/middleware/productUpdate.middleware';
 import { categoryCreateMiddleware } from './middleware/categoryCreate.middleware';
 import { categoryUpdateMiddleware } from './middleware/categoryUpdate.middleware';
+import { CategoryAttribute } from './categorySchema/categoryWiseAttr.entity';
 @Module({
 
-    imports: [TypeOrmModule.forFeature([Category],'ebhubon')],
+    imports: [TypeOrmModule.forFeature([Category],'ebhubon'),TypeOrmModule.forFeature([CategoryAttribute],'ebhubon')],
     controllers: [ CategoryController],
     providers: [ CategoryService],
     exports: [CategoryService,]

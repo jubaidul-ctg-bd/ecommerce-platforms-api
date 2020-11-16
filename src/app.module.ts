@@ -29,9 +29,11 @@ import { Product } from './products/productSchema/products.entity';
 import { Seller } from './sellers/sellerSchema/seller.entity';
 import { SellerUser } from './sellers/sellerSchema/userSeller.entity';
 import { User } from './users/userSchema/user.entity';
+import { CategoryAttribute } from './category/categorySchema/categoryWiseAttr.entity';
 
 @Module({
   imports: [
+    
     TypeOrmModule.forRootAsync({
         name:'ebhubon',
         useFactory: () => ({
@@ -39,7 +41,7 @@ import { User } from './users/userSchema/user.entity';
         host: 'localhost',
         port: 27017,
         database: 'ebhubon',
-        entities: [Category,User,Seller,Product,SellerUser],
+        entities: [Category,User,Seller,Product,SellerUser,CategoryAttribute],
         synchronize: true,
         useNewUrlParser: true,
         logging: true,
@@ -104,6 +106,7 @@ import { User } from './users/userSchema/user.entity';
   TypeOrmModule.forFeature([User ], 'ebhubon'),
   TypeOrmModule.forFeature([Seller ], 'ebhubon'),
   TypeOrmModule.forFeature([SellerUser],'ebhubon'),
+  TypeOrmModule.forFeature([CategoryAttribute],'ebhubon'),
   CategoryModule, ProductsModule, UsersModule,AuthModule, SellersModule, MediaModule],
   controllers: [AppController, CategoryController, ProductsController, UsersController, SellersController, MediaController],
   providers: [AppService, CategoryService, ProductsService, UsersService,AuthModule, SellersService, MediaService],
