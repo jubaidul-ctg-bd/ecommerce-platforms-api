@@ -116,7 +116,7 @@ export class CategoryController {
     }
 
 
-    @Post('deleteAttribute/:id')
+    @Post('deleteAttribute')
     attributeDelete(@Body() body) {
         console.log("DELETE CALLED",body)
         return this.categoryService.attributeDelete(body);

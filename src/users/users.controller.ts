@@ -14,7 +14,7 @@ export class UsersController {
     @UsePipes(new ValidationPipe())
     @Post('registration')
     async createfirst(@Body() user: User) {
-      //console.log("SERLLER CONTROLLR CALLED",user)
+      console.log("SERLLER CONTROLLR CALLED",user)
         let newUser : any = {}
         try{
               newUser = await this.userInfoService.create(user);
